@@ -5,9 +5,13 @@ import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.LinkedList;
+import java.util.List;
 
 import DTO.TeamToDoList;
+import mysql.DBConnection;
 
 public class TeamToDoListDAO {
 	private Connection conn;
@@ -31,7 +35,7 @@ public class TeamToDoListDAO {
 	}
 	
 	/* Method */
-	//insert
+	// @author hyeri insert
 	public int insertToDoList(TeamToDoList toDoList) throws Exception {
 		int result = 0;
 		try {
@@ -58,7 +62,7 @@ public class TeamToDoListDAO {
 		return result;
 	}
 	
-	//delete
+	// @author hyeri delete
 	public int deleteToDoList(TeamToDoList toDoList) throws Exception {
 		int result = 0;
 		try {
@@ -78,7 +82,7 @@ public class TeamToDoListDAO {
 		return result;
 	}
 	
-	//update
+	// @author hyeri update
 	public int updateToDoList(TeamToDoList toDoList) throws Exception {
 		int result = 0;
 		try {
@@ -103,4 +107,40 @@ public class TeamToDoListDAO {
 		return result;
 	}
 	
+	// @author orbit TeamTodoList 리스트 전체 불러오기
+	public static List<TeamToDoList> getAllTodoList() {
+		List<TeamToDoList> todoList = new LinkedList<>();
+		try {
+			String sql = "SELECT * from teamtodolist";
+			PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				Integer teamId = rs.getInt("teamId");
+				String title = rs.getString("title");
+				String content = rs.getString("content");
+				LocalDate createDate = rs.getDate("createDate").toLocalDate();
+				String closedDate = rs.getString("closedDate");
+				Integer priority = rs.getInt("priority");
+				Boolean isComplete = rs.getBoolean("isComplete");
+				Boolean isDeleted = rs.getBoolean("isDeleted");
+
+				TeamToDoList list = new TeamToDoList(
+						teamId, 
+						title, 
+						content, 
+						createDate, 
+						closedDate, 
+						priority,
+						isComplete, 
+						isDeleted
+						);
+				
+				todoList.add(list);
+			}
+		} catch (SQLException throwables) {
+			throwables.printStackTrace();
+		}
+		
+		return todoList;
+	}
 }

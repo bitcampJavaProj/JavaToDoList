@@ -1,4 +1,4 @@
-package DAO;
+package server;
 
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -7,22 +7,21 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import DTO.TeamTodoList;
+import DAO.TeamToDoListDAO;
+import DTO.TeamToDoList;
 import mysql.DBConnection;
 
-/**
- * teamTodoListDAO : teamTodoList sorting용
- * 
- * @author orbit
- * @todo 24.02.22
- */
-public class TeamTodoListDAO {
+public class Server {
+
 	public static void main(String[] args) {
+		/**
+		 * @author orbit
+		 */
 		DBConnection.openConnection();
 
-		List<TeamTodoListRecord> todoList = new LinkedList<>();
+		List<TeamToDoList> todoList = new LinkedList<>();
 
-		todoList = TeamTodoList.getAllTodoList();
+		todoList = TeamToDoListDAO.getAllTodoList();
 		
 		// JSON 라이브러리를 사용하여 리스트를 JSON 형식으로 변환
 		JSONArray jsonArray = new JSONArray(todoList);
@@ -51,9 +50,9 @@ public class TeamTodoListDAO {
 	 * 
 	 * @author orbit
 	 */
-	static class SortByDate implements Comparator<TeamTodoListRecord> {
+	static class SortByDate implements Comparator<TeamToDoList> {
 		@Override
-		public int compare(TeamTodoListRecord a, TeamTodoListRecord b) {
+		public int compare(TeamToDoList a, TeamToDoList b) {
 			return a.getClosedDate().compareTo(b.getClosedDate());
 		}
 	}

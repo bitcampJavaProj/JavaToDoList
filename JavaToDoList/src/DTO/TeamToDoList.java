@@ -1,6 +1,5 @@
 package DTO;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
 public class TeamToDoList {
@@ -12,6 +11,26 @@ public class TeamToDoList {
 	private Integer priority;
 	private Boolean isComplete;
 	private Boolean isDeleted;
+	
+	public TeamToDoList (
+			Integer teamId, 
+			String title, 
+			String content, 
+			LocalDate createDate, 
+			String closedDate,
+			Integer priority,
+			Boolean isComplete,
+			Boolean isDeleted
+			) {
+		this.teamId = teamId;
+		this.title = title;
+		this.content = content;
+		this.createDate = createDate;
+		this.closedDate = closedDate;
+		this.priority = priority;
+		this.isComplete = isComplete;
+		this.isDeleted = isDeleted;	
+	}
 		
 	public Integer getTeamId() {
 		return teamId;
