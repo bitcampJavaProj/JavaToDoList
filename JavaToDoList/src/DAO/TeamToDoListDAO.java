@@ -102,6 +102,7 @@ public class TeamToDoListDAO {
 			String sql = "SELECT * from teamtodolist";
 			PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
+			
 			while (rs.next()) {
 				Integer teamId = rs.getInt("teamId");
 				String title = rs.getString("title");
@@ -125,9 +126,10 @@ public class TeamToDoListDAO {
 				
 				todoList.add(list);
 			}
-		} catch (SQLException throwables) {
-			throwables.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+		System.out.println(todoList);
 		
 		return todoList;
 	}
