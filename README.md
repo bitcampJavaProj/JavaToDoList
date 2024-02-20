@@ -18,8 +18,25 @@ Server + Client + DB 투두리스트
 - Java 17
 - JDK 17
 - IDE: Eclipse
-- Database:
-- ORM:
+- Database: MySQL 8.0.36
+
+### 🗒 ERD
+![image](https://github.com/bitcampJavaProj/JavaToDoList/assets/141993427/32a4430e-8a23-4386-8762-0c36de363a41)
 
 ## 📌 주요 기능
+- 회원가입
+- 로그인
 - 투두리스트 작성
+- 투두리스트 삭제
+- 투두리스트 수정
+- 투두리스트 전체 조회
+- 투두리스트 마감일자로 조회
+- 투두리스트 완료된 작업 조회
+- 투두리스트 미완료된 작업 조회
+- 투표 등록
+- 투표 삭제
+- 진행중인 투표 조회
+- 만료된 투표 조회
+- 투표 결과 조회
+- 투표 수정
+- 전체 채팅
