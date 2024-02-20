@@ -107,13 +107,17 @@ public class TeamToDoListDAO {
 		return result;
 	}
 	
-	// @author orbit TeamTodoList 리스트 전체 불러오기
+	/**
+	 * TeamTodoList 리스트 전체 불러오기
+	 * @author orbit 
+	 */
 	public static List<TeamToDoList> getAllTodoList() {
 		List<TeamToDoList> todoList = new LinkedList<>();
 		try {
 			String sql = "SELECT * from teamtodolist";
 			PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
+			
 			while (rs.next()) {
 				Integer teamId = rs.getInt("teamId");
 				String title = rs.getString("title");
@@ -137,9 +141,10 @@ public class TeamToDoListDAO {
 				
 				todoList.add(list);
 			}
-		} catch (SQLException throwables) {
-			throwables.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+		System.out.println(todoList);
 		
 		return todoList;
 	}
