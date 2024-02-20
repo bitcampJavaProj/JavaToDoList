@@ -1,23 +1,23 @@
 package DAO;
 
 /**
- * TodoList
+ * TeamTodoListRecord
  * : Todo List의 각 list들
  * 
  * @author orbit
  */
-public class teamTodoList {
+public class TeamTodoListRecord {
 	// field
 	private Integer teamId;						// 고유 ID
 	private String title;						// 제목
 	private String content;						// 내용
 	private java.util.Date createDate;			// 생성일
 	private java.util.Date closedDate;			// 마감일
-	private Integer priority;					// 우선순위
+	private Integer priority;					// 우선순위 (숫자가 작을수록 높음)
 	private Boolean isComplete;					// 완료 여부 (0 = false(default), 1 = true)
 	private Boolean isDeleted;					// 삭제 여부 (0 = false, 1 = true)
 	
-	public teamTodoList (
+	public TeamTodoListRecord (
 			Integer teamId, 
 			String title, 
 			String content, 
