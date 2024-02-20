@@ -1,16 +1,36 @@
 package DTO;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 public class TeamToDoList {
 	private Integer teamId;
 	private String title;
 	private String content;
-	private Date createDate;
+	private LocalDate createDate;
 	private String closedDate;
 	private Integer priority;
 	private Boolean isComplete;
 	private Boolean isDeleted;
+	
+	public TeamToDoList (
+			Integer teamId, 
+			String title, 
+			String content, 
+			LocalDate createDate, 
+			String closedDate,
+			Integer priority,
+			Boolean isComplete,
+			Boolean isDeleted
+			) {
+		this.teamId = teamId;
+		this.title = title;
+		this.content = content;
+		this.createDate = createDate;
+		this.closedDate = closedDate;
+		this.priority = priority;
+		this.isComplete = isComplete;
+		this.isDeleted = isDeleted;	
+	}
 		
 	public Integer getTeamId() {
 		return teamId;
@@ -30,10 +50,10 @@ public class TeamToDoList {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public Date getCreateDate() {
+	public LocalDate getCreateDate() {
 		return createDate;
 	}
-	public void setCreateDate(Date createDate) {
+	public void setCreateDate(LocalDate createDate) {
 		this.createDate = createDate;
 	}
 	public String getClosedDate() {
