@@ -7,8 +7,8 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import DTO.DBConnection;
 import DTO.TeamTodoList;
+import mysql.DBConnection;
 
 /**
  * teamTodoListDAO : teamTodoList sorting용
