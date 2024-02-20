@@ -95,11 +95,35 @@ public class TeamToDoListDAO {
 		return result;
 	}
 	
-	// @author orbit 투두리스트 전체 불러오기
-	public static List<TeamToDoList> getAllTodoList() {
+	/**
+	 * getTodoList
+	 * : todolist DB에서 불러오는 기능
+	 * filter param에 따라 정렬
+	 * 
+	 * @param String filter
+	 * all =  전체 내용 가져오기(종료 날짜 순 & 중요도 순)
+	 * completed =  완료한 리스트 불러오기(종료 날짜 순 & 중요도 순)
+	 * incomplete =  종료한 리스트 불러오기(종료 날짜 순 & 중요도 순) 
+	 * @return todoList
+	 */
+	public static List<TeamToDoList> getTodoList(String filter) {
 		List<TeamToDoList> todoList = new LinkedList<>();
 		try {
-			String sql = "SELECT * from teamtodolist";
+	        String sql;
+
+	        if ("all".equals(filter)) {
+	            // 전체 내용 가져오기(종료 날짜 순 & 중요도 순)
+	            sql = "SELECT * FROM teamtodolist ORDER BY closedDate ASC, priority DESC";
+	        } else if ("completed".equals(filter)) {
+	            // 완료한 리스트 불러오기(종료 날짜 순 & 중요도 순)
+	            sql = "SELECT * FROM teamtodolist WHERE isComplete = 1 ORDER BY closedDate ASC, priority DESC";
+	        } else if ("incomplete".equals(filter)) {
+	            // 종료한 리스트 불러오기(종료 날짜 순 & 중요도 순) 
+	            sql = "SELECT * FROM teamtodolist WHERE isComplete = 0 ORDER BY closedDate ASC, priority DESC";
+	        } else {
+	            throw new IllegalArgumentException("Invalid filter value. Supported values: 'all', 'completed', 'incomplete'");
+	        }
+			
 			PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 			
