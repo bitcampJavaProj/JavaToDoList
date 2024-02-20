@@ -14,29 +14,14 @@ import DTO.TeamToDoList;
 import mysql.DBConnection;
 
 public class TeamToDoListDAO {
-	private Connection conn;
 	private PreparedStatement pstmt;
 	private String sql;
 	
-	public TeamToDoListDAO() {
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			
-			conn = DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/thisisjava",
-					"javaProj",
-					"20240219!!"
-			);
-			pstmt = null;
-			sql = "";
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
+	public TeamToDoListDAO() {}
 	
 	/* Method */
-	// @author hyeri insert
-	public int insertToDoList(TeamToDoList toDoList) throws Exception {
+	// @author hyeri 투두리스트 작성
+	public int insertToDoList(Connection conn, TeamToDoList toDoList) throws Exception {
 		int result = 0;
 		try {
 			sql = "insert into teamtodolist (title, content, createDate, closedDate, priority, isComplete, isDelete) ";
@@ -57,13 +42,14 @@ public class TeamToDoListDAO {
 			e.printStackTrace();
 		} finally {
 			pstmt.close();
+			conn.close();
 		}
 		System.out.println("TeamToDoListDAO: " + result);
 		return result;
 	}
 	
-	// @author hyeri delete
-	public int deleteToDoList(TeamToDoList toDoList) throws Exception {
+	// @author hyeri 투두리스트 삭제
+	public int deleteToDoList(Connection conn, TeamToDoList toDoList) throws Exception {
 		int result = 0;
 		try {
 			sql = "update teamtodolist set isDeleted = 1 where teamId = ?";
@@ -77,13 +63,14 @@ public class TeamToDoListDAO {
 			e.printStackTrace();
 		} finally {
 			pstmt.close();
+			conn.close();
 		}
 		System.out.println("TeamToDoListDAO: " + result);
 		return result;
 	}
 	
-	// @author hyeri update
-	public int updateToDoList(TeamToDoList toDoList) throws Exception {
+	// @author hyeri 투두리스트 수정
+	public int updateToDoList(Connection conn, TeamToDoList toDoList) throws Exception {
 		int result = 0;
 		try {
 			sql = "update teamtodolist set title = ?, content=?, closedDate = ?, priority = ?, isComplete = ? where teamId = ?";
@@ -102,12 +89,13 @@ public class TeamToDoListDAO {
 			e.printStackTrace();
 		} finally {
 			pstmt.close();
+			conn.close();
 		}
 		System.out.println("TeamToDoListDAO: " + result);
 		return result;
 	}
 	
-	// @author orbit TeamTodoList 리스트 전체 불러오기
+	// @author orbit 투두리스트 전체 불러오기
 	public static List<TeamToDoList> getAllTodoList() {
 		List<TeamToDoList> todoList = new LinkedList<>();
 		try {
