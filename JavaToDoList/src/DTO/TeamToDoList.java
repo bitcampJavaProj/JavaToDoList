@@ -1,12 +1,13 @@
 package DTO;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 public class TeamToDoList {
 	private Integer teamId;
 	private String title;
 	private String content;
-	private Date createDate;
+	private LocalDate createDate;
 	private String closedDate;
 	private Integer priority;
 	private Boolean isComplete;
@@ -30,10 +31,10 @@ public class TeamToDoList {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public Date getCreateDate() {
+	public LocalDate getCreateDate() {
 		return createDate;
 	}
-	public void setCreateDate(Date createDate) {
+	public void setCreateDate(LocalDate createDate) {
 		this.createDate = createDate;
 	}
 	public String getClosedDate() {
