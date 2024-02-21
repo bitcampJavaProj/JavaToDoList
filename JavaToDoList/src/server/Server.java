@@ -4,22 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import DAO.TeamToDoListDAO;
-import DTO.TeamToDoList;
 import mysql.DBConnection;
 
 public class Server {
@@ -29,25 +20,8 @@ public class Server {
     public static void main(String[] args) {
         // DB 연결 초기화
         DBConnection.openConnection();
-
-        List<TeamToDoList> todoList = new LinkedList<>();
-
-        todoList = TeamToDoListDAO.getTodoList("all");
-
-        DBConnection.closeConnection();
-
-        // 서버 소켓 생성 및 클라이언트 연결 대기
         
-        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-            System.out.println("Server listening on port " + PORT);
-
-            while (true) {
-                Socket clientSocket = serverSocket.accept();
-                new ClientHandler(clientSocket).start();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        DBConnection.closeConnection();
     }
 
     static class ClientHandler extends Thread {
