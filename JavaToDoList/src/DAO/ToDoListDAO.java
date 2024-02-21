@@ -20,60 +20,89 @@ public class ToDoListDAO {
 	public ToDoListDAO() {}
 	
 	/* Method */
-	// @author hyeri 투두리스트 작성
+
+	/**
+	 * @author 서혜리
+	 * 
+	 * insertToDoList
+	 * : todolist를 DB에 저장하는 기능
+	 * 
+	 * result
+	 * : db에 저장이 성공적으로 되면 1을 반환
+	 * 
+	 * @return result
+	 */
 	public int insertToDoList(Connection conn, ToDoList toDoList) throws Exception {
 		int result = 0;
 		try {
-			sql = "insert into teamtodolist (title, content, createDate, closedDate, priority, isComplete, isDelete) ";
-			sql += "values (?, ?, ?, ?, ?, ?, ?)";
+			sql = "insert into todolist (userId, title, content, createDate, closedDate, priority) ";
+			sql += "values (?, ?, ?, ?, ?, ?)";
 			
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setString(1, toDoList.getTitle());
-			pstmt.setString(2, toDoList.getContent());
-			pstmt.setDate(3, Date.valueOf(LocalDate.now()));
-			pstmt.setString(4, toDoList.getClosedDate());
-			pstmt.setInt(5, toDoList.getPriority());
-			pstmt.setBoolean(6, toDoList.getIsComplete());
-			pstmt.setBoolean(7, toDoList.getIsDeleted());
+			pstmt.setInt(1, toDoList.getUserId());
+			pstmt.setString(2, toDoList.getTitle());
+			pstmt.setString(3, toDoList.getContent());
+			pstmt.setDate(4, Date.valueOf(LocalDate.now()));
+			pstmt.setString(5, toDoList.getClosedDate());
+			pstmt.setInt(6, toDoList.getPriority());
 			
 			result = pstmt.executeUpdate();
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
 			pstmt.close();
-			conn.close();
 		}
-		System.out.println("TeamToDoListDAO: " + result);
+		System.out.println("ToDoListDAO: " + result);
 		return result;
 	}
 	
-	// @author hyeri 투두리스트 삭제
+	/**
+	 * @author 서혜리
+	 * 
+	 * deleteToDoList
+	 * : todolist를 삭제하는 기능
+	 * 
+	 * result
+	 * : db에서 삭제가 성공적으로 되면 1을 반환
+	 * 
+	 * @return result
+	 */
 	public int deleteToDoList(Connection conn, ToDoList toDoList) throws Exception {
 		int result = 0;
 		try {
-			sql = "update teamtodolist set isDeleted = 1 where teamId = ?";
+			sql = "update todolist set isDeleted = 1 where userId = ? and toDoListId = ?";
 			
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setInt(1, toDoList.getTeamId());
+			pstmt.setInt(1, toDoList.getUserId());
+			pstmt.setInt(2, toDoList.getToDoListId());
 			
 			result = pstmt.executeUpdate();
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
 			pstmt.close();
-			conn.close();
 		}
-		System.out.println("TeamToDoListDAO: " + result);
+		System.out.println("ToDoListDAO: " + result);
 		return result;
 	}
 	
-	// @author hyeri 투두리스트 수정
+	/**
+	 * @author 서혜리
+	 * 
+	 * updateToDoList
+	 * : todolist를 수정하는 기능
+	 * 
+	 * result
+	 * : db에 저장이 성공적으로 되면 1을 반환
+	 * 
+	 * @return result
+	 */
 	public int updateToDoList(Connection conn, ToDoList toDoList) throws Exception {
 		int result = 0;
 		try {
-			sql = "update teamtodolist set title = ?, content=?, closedDate = ?, priority = ?, isComplete = ? where teamId = ?";
+			sql = "update todolist set title = ?, content=?, closedDate = ?, priority = ?, isComplete = ? where userId = ?";
 			
 			pstmt = conn.prepareStatement(sql);
 			
@@ -82,16 +111,15 @@ public class ToDoListDAO {
 			pstmt.setString(3, toDoList.getClosedDate());
 			pstmt.setInt(4, toDoList.getPriority());
 			pstmt.setBoolean(5, toDoList.getIsComplete());
-			pstmt.setInt(6, toDoList.getTeamId());
+			pstmt.setInt(6, toDoList.getUserId());
 			
 			result = pstmt.executeUpdate();
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
 			pstmt.close();
-			conn.close();
 		}
-		System.out.println("TeamToDoListDAO: " + result);
+		System.out.println("ToDoListDAO: " + result);
 		return result;
 	}
 	
@@ -113,13 +141,13 @@ public class ToDoListDAO {
 
 	        if ("all".equals(filter)) {
 	            // 전체 내용 가져오기(종료 날짜 순 & 중요도 순)
-	            sql = "SELECT * FROM teamtodolist ORDER BY closedDate ASC, priority DESC";
+	            sql = "SELECT * FROM todolist ORDER BY closedDate ASC, priority DESC";
 	        } else if ("completed".equals(filter)) {
 	            // 완료한 리스트 불러오기(종료 날짜 순 & 중요도 순)
-	            sql = "SELECT * FROM teamtodolist WHERE isComplete = 1 ORDER BY closedDate ASC, priority DESC";
+	            sql = "SELECT * FROM todolist WHERE isComplete = 1 ORDER BY closedDate ASC, priority DESC";
 	        } else if ("incomplete".equals(filter)) {
 	            // 종료한 리스트 불러오기(종료 날짜 순 & 중요도 순) 
-	            sql = "SELECT * FROM teamtodolist WHERE isComplete = 0 ORDER BY closedDate ASC, priority DESC";
+	            sql = "SELECT * FROM todolist WHERE isComplete = 0 ORDER BY closedDate ASC, priority DESC";
 	        } else {
 	            throw new IllegalArgumentException("Invalid filter value. Supported values: 'all', 'completed', 'incomplete'");
 	        }
@@ -128,6 +156,7 @@ public class ToDoListDAO {
 			ResultSet rs = ps.executeQuery();
 			
 			while (rs.next()) {
+				Integer toDoListId = rs.getInt("toDoListId");
 				Integer teamId = rs.getInt("teamId");
 				String title = rs.getString("title");
 				String content = rs.getString("content");
@@ -138,6 +167,7 @@ public class ToDoListDAO {
 				Boolean isDeleted = rs.getBoolean("isDeleted");
 
 				ToDoList list = new ToDoList(
+						toDoListId,
 						teamId, 
 						title, 
 						content, 
