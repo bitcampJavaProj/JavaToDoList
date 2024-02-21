@@ -3,7 +3,8 @@ package DTO;
 import java.time.LocalDate;
 
 public class ToDoList {
-	private Integer teamId;
+	private Integer toDoListId;
+	private Integer userId;
 	private String title;
 	private String content;
 	private LocalDate createDate;
@@ -13,7 +14,8 @@ public class ToDoList {
 	private Boolean isDeleted;
 	
 	public ToDoList (
-			Integer teamId, 
+			Integer toDoListId,
+			Integer userId, 
 			String title, 
 			String content, 
 			LocalDate createDate, 
@@ -22,7 +24,8 @@ public class ToDoList {
 			Boolean isComplete,
 			Boolean isDeleted
 			) {
-		this.teamId = teamId;
+		this.toDoListId = toDoListId;
+		this.userId = userId;
 		this.title = title;
 		this.content = content;
 		this.createDate = createDate;
@@ -32,11 +35,14 @@ public class ToDoList {
 		this.isDeleted = isDeleted;	
 	}
 		
-	public Integer getTeamId() {
-		return teamId;
+	public Integer getToDoListId() {
+		return userId;
 	}
-	public void setTeamId(Integer teamId) {
-		this.teamId = teamId;
+	public Integer getUserId() {
+		return userId;
+	}
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 	public String getTitle() {
 		return title;
@@ -83,8 +89,8 @@ public class ToDoList {
 	
 	@Override
 	public String toString() {
-		String str = String.format("할 일: %s\n메모: %s\n생성 날짜: %s\n마감 날짜: %s\n우선 순위: %d\n완료 여부: %b\n삭제 여부: %b\n", 
-									title, content, createDate, closedDate, priority, isComplete, isDeleted);
+		String str = String.format("유저 번호: %s\n할 일: %s\n메모: %s\n생성 날짜: %s\n마감 날짜: %s\n우선 순위: %d\n완료 여부: %b\n삭제 여부: %b\n", 
+									userId, title, content, createDate, closedDate, priority, isComplete, isDeleted);
 		return str;
 	}
 }
