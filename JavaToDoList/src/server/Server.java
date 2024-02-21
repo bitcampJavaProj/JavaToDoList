@@ -85,26 +85,26 @@ public class Server {
                 // 클라이언트로부터 요청 받음
                 String request = reader.readLine();
 
-                if (request.equals("SIGNUP")) {
+                if (request.equals("회원 가입")) {
                     // 회원 가입 요청 처리
                     String userId = reader.readLine();
                     String userName = reader.readLine();
                     String password = reader.readLine();
 
                     if (insertUser(connection, userId, userName, password)) {
-                        writer.println("SIGNUP_SUCCESS");
+                        writer.println("가입 성공");
                     } else {
-                        writer.println("SIGNUP_FAILURE");
+                        writer.println("가입 실패");
                     }
-                } else if (request.equals("LOGIN")) {
+                } else if (request.equals("로그인")) {
                     // 로그인 요청 처리
                     String userId = reader.readLine();
                     String password = reader.readLine();
 
                     if (loginUser(connection, userId, password)) {
-                        writer.println("LOGIN_SUCCESS");
+                        writer.println("로그인 성공");
                     } else {
-                        writer.println("LOGIN_FAILURE");
+                        writer.println("로그인 실패");
                     }
                 }
 

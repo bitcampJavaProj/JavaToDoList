@@ -9,14 +9,16 @@ public class Client {
     private static final int SERVER_PORT = 9999;
 
     public static void main(String[] args) {
+    	// 클라이언트가 서버 연결 후 서버 데이터 불러오기, 사용자 입력을 서버에 전송
         try (Socket socket = new Socket(SERVER_IP, SERVER_PORT);
              BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
              Scanner scanner = new Scanner(System.in)) {
-
-            System.out.println("Welcome to the Chat! Please choose an option:");
-            System.out.println("1. Sign Up");
-            System.out.println("2. Log In");
+        	
+        	//환영 메세지 및 옵션 안내
+            System.out.println("*옵션 선택");
+            System.out.println("1. 회원 가입");
+            System.out.println("2. 로그인");
 
             int choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
