@@ -1,4 +1,4 @@
-# SocialSyn
+# 🫂 SocialSyn
 Server + Client + DB
 
 ## 💻 프로젝트 소개
