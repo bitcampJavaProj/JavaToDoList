@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import DAO.*;
 import mysql.DBConnection;
 
 public class Server {
@@ -39,6 +40,9 @@ public class Server {
 
                 // 클라이언트로부터 요청 받음
                 String request = reader.readLine();
+                
+                // UserDAO 인스턴스 생성
+                UserDAO userDAO = new UserDAO();
 
                 if (request.equals("회원 가입")) {
                     // 회원 가입 요청 처리
@@ -46,7 +50,7 @@ public class Server {
                     String userName = reader.readLine();
                     String password = reader.readLine();
 
-                    if (insertUser(connection, userId, userName, password)) {
+                    if (userDAO.insertUser(connection, userId, userName, password)) {
                         writer.println("가입 성공");
                     } else {
                         writer.println("가입 실패");
@@ -56,7 +60,7 @@ public class Server {
                     String userId = reader.readLine();
                     String password = reader.readLine();
 
-                    if (loginUser(connection, userId, password)) {
+                    if (userDAO.loginUser(connection, userId, password)) {
                         writer.println("로그인 성공");
                     } else {
                         writer.println("로그인 실패");
@@ -65,29 +69,6 @@ public class Server {
 
             } catch (IOException | SQLException e) {
                 e.printStackTrace();
-            }
-        }
-
-        private boolean insertUser(Connection connection, String userId, String userName, String password) throws SQLException {
-            String insertQuery = "INSERT INTO users (userid, username, password) VALUES (?, ?, ?)";
-            try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
-                preparedStatement.setString(1, userId);
-                preparedStatement.setString(2, userName);
-                preparedStatement.setString(3, password);
-
-                int rowsAffected = preparedStatement.executeUpdate();
-                return rowsAffected > 0;
-            }
-        }
-
-        private boolean loginUser(Connection connection, String userId, String password) throws SQLException {
-            String loginQuery = "SELECT * FROM users WHERE userid = ? AND password = ?";
-            try (PreparedStatement preparedStatement = connection.prepareStatement(loginQuery)) {
-                preparedStatement.setString(1, userId);
-                preparedStatement.setString(2, password);
-
-                ResultSet resultSet = preparedStatement.executeQuery();
-                return resultSet.next();
             }
         }
     }
