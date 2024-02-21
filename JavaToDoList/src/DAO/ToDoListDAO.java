@@ -10,18 +10,18 @@ import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
-import DTO.TeamToDoList;
+import DTO.ToDoList;
 import mysql.DBConnection;
 
-public class TeamToDoListDAO {
+public class ToDoListDAO {
 	private PreparedStatement pstmt;
 	private String sql;
 	
-	public TeamToDoListDAO() {}
+	public ToDoListDAO() {}
 	
 	/* Method */
 	// @author hyeri 투두리스트 작성
-	public int insertToDoList(Connection conn, TeamToDoList toDoList) throws Exception {
+	public int insertToDoList(Connection conn, ToDoList toDoList) throws Exception {
 		int result = 0;
 		try {
 			sql = "insert into teamtodolist (title, content, createDate, closedDate, priority, isComplete, isDelete) ";
@@ -49,7 +49,7 @@ public class TeamToDoListDAO {
 	}
 	
 	// @author hyeri 투두리스트 삭제
-	public int deleteToDoList(Connection conn, TeamToDoList toDoList) throws Exception {
+	public int deleteToDoList(Connection conn, ToDoList toDoList) throws Exception {
 		int result = 0;
 		try {
 			sql = "update teamtodolist set isDeleted = 1 where teamId = ?";
@@ -70,7 +70,7 @@ public class TeamToDoListDAO {
 	}
 	
 	// @author hyeri 투두리스트 수정
-	public int updateToDoList(Connection conn, TeamToDoList toDoList) throws Exception {
+	public int updateToDoList(Connection conn, ToDoList toDoList) throws Exception {
 		int result = 0;
 		try {
 			sql = "update teamtodolist set title = ?, content=?, closedDate = ?, priority = ?, isComplete = ? where teamId = ?";
@@ -106,8 +106,8 @@ public class TeamToDoListDAO {
 	 * incomplete =  종료한 리스트 불러오기(종료 날짜 순 & 중요도 순) 
 	 * @return todoList
 	 */
-	public static List<TeamToDoList> getTodoList(String filter) {
-		List<TeamToDoList> todoList = new LinkedList<>();
+	public static List<ToDoList> getTodoList(String filter) {
+		List<ToDoList> todoList = new LinkedList<>();
 		try {
 	        String sql;
 
@@ -137,7 +137,7 @@ public class TeamToDoListDAO {
 				Boolean isComplete = rs.getBoolean("isComplete");
 				Boolean isDeleted = rs.getBoolean("isDeleted");
 
-				TeamToDoList list = new TeamToDoList(
+				ToDoList list = new ToDoList(
 						teamId, 
 						title, 
 						content, 
