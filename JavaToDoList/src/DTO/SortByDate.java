@@ -7,9 +7,9 @@ import java.util.Comparator;
  * 
  * @author orbit
  */
-public class SortByDate implements Comparator<TeamToDoList> {
+public class SortByDate implements Comparator<ToDoList> {
 	@Override
-	public int compare(TeamToDoList a, TeamToDoList b) {
+	public int compare(ToDoList a, ToDoList b) {
 		return a.getClosedDate().compareTo(b.getClosedDate());
 	}
 }

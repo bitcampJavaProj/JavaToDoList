@@ -2,7 +2,7 @@ package DTO;
 
 import java.time.LocalDate;
 
-public class TeamToDoList {
+public class ToDoList {
 	private Integer teamId;
 	private String title;
 	private String content;
@@ -12,7 +12,7 @@ public class TeamToDoList {
 	private Boolean isComplete;
 	private Boolean isDeleted;
 	
-	public TeamToDoList (
+	public ToDoList (
 			Integer teamId, 
 			String title, 
 			String content, 
