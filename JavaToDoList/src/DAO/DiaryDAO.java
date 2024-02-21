@@ -37,4 +37,30 @@ public class DiaryDAO {
    
       return result;
    }
+   
+   /**
+    * @author 권재원
+    * 일기 단건 삭제
+    */
+   public int deleteDiary(Connection conn, Diary diary) throws Exception {
+      int result = 0;
+      
+      try {
+         sql = "UPDATE DIARY SET isDeleted = 1 WHERE userId = ? AND diaryId = ?";
+      
+         pstmt = conn.prepareStatement(sql);
+         
+         pstmt.setInt(1, diary.getUserId());
+         pstmt.setInt(2, diary.getDiaryId());
+         
+         result = pstmt.executeUpdate();
+      } catch(Exception e) {
+         e.printStackTrace();
+      } finally {
+         pstmt.close();
+      }
+      
+      return result;
+   }
+
 }
