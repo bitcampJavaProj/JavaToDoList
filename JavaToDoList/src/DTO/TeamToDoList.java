@@ -83,7 +83,7 @@ public class TeamToDoList {
 	
 	@Override
 	public String toString() {
-		String str = String.format("할 일: %s\n메모: %s\n생성 날짜: %s\n마감 날짜: %s\n우선 순위: %d\n완료 여부: %d\n삭제 여부: %d\n", 
+		String str = String.format("할 일: %s\n메모: %s\n생성 날짜: %s\n마감 날짜: %s\n우선 순위: %d\n완료 여부: %b\n삭제 여부: %b\n", 
 									title, content, createDate, closedDate, priority, isComplete, isDeleted);
 		return str;
 	}
