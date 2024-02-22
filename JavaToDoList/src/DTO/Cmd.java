@@ -10,5 +10,12 @@ import java.io.Serializable;
  */
 public class Cmd implements Serializable {
 	private static final long serialVersionUID = 1L;
-	String cmd;
+	Integer cmd;
+	
+	public Integer getCmd() {
+		return cmd;
+	}
+	public void setCmd(Integer cmd) {
+		this.cmd = cmd;
+	}
 }
