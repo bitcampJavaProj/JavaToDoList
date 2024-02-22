@@ -124,21 +124,20 @@ public class ToDoListDAO {
 	}
 	
 	/**
-	 * getTodoList
-	 * : todolist DB에서 불러오는 기능
-	 * filter param에 따라 정렬
+	 * @author orbit
+	 * getTodoList<br>
+	 * : todolist DB에서 불러오는 기능<br>
+	 * filter param에 따라 정렬<br>
 	 * 
-	 * @param String filter
-	 * all =  전체 내용 가져오기(종료 날짜 순 & 중요도 순)
-	 * completed =  완료한 리스트 불러오기(종료 날짜 순 & 중요도 순)
-	 * incomplete =  종료한 리스트 불러오기(종료 날짜 순 & 중요도 순) 
+	 * @param String filter<br>
+	 * all =  전체 내용 가져오기(종료 날짜 순 & 중요도 순)<br>
+	 * completed =  완료한 리스트 불러오기(종료 날짜 순 & 중요도 순)<br>
+	 * incomplete =  종료한 리스트 불러오기(종료 날짜 순 & 중요도 순) <br>
 	 * @return todoList
 	 */
-	public static List<ToDoList> getTodoList(String filter) {
+	public List<ToDoList> getTodoList(String filter) {
 		List<ToDoList> todoList = new LinkedList<>();
 		try {
-	        String sql;
-
 	        if ("all".equals(filter)) {
 	            // 전체 내용 가져오기(종료 날짜 순 & 중요도 순)
 	            sql = "SELECT * FROM todolist ORDER BY closedDate ASC, priority DESC";

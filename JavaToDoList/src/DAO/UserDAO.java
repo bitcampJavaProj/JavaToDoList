@@ -1,33 +1,90 @@
 package DAO;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
-import DTO.User;
+import mysql.DBConnection;
 
 public class UserDAO {
-	public boolean insertUser(Connection connection, User user)
-			throws SQLException {
-		String insertQuery = "INSERT INTO users (username, password) VALUES (?, ?)";
-		try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
-			preparedStatement.setString(1, user.getUsername());
-			preparedStatement.setString(2, user.getPassword());
+	
+	/**
+	 * insertUser<br>
+	 * 유저 생성 기능
+	 * 
+	 * @param username 유저 ID
+	 * @param password 유저 PW
+	 * @return 가입성공 여부 0 = false, 1 = true, 2 = 사용중인 아이디
+	 */
+	public static int insertUser(String username, String password) throws Exception {
+	    int result = 0;
 
-			int rowsAffected = preparedStatement.executeUpdate();
-			return rowsAffected > 0;
-		}
+	    // 동일한 유저 있는지 확인
+	    if (isUsernameExists(username)) {
+	        result = 2; // 동일 유저 있을시
+	        System.out.println("ToDoListDAO: 이미 사용중인 ID입니다. 다른 아이디를 작성해 주세요.");
+	        return result;
+	    }
+
+	    String sql = "INSERT INTO user (username, password) VALUES (?, ?)";
+	    try (PreparedStatement pstmt = DBConnection.getConnection().prepareStatement(sql)) {
+	        pstmt.setString(1, username);
+	        pstmt.setString(2, password);
+
+	        result = pstmt.executeUpdate();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    System.out.println("ToDoListDAO: " + result);
+	    return result;
 	}
+	
+	/**
+	 * loginUser<br>
+	 * 유저 로그인 기능
+	 *
+	 * @param username 유저 ID
+	 * @param password 유저 PW
+	 * @return 유저 로그인 성공시 유저 고유 ID 반환, 실패시 0 반환
+	 */
+	public static int loginUser(String username, String password) throws Exception {
+	    int userId = 0;
+	    String sql = "SELECT userId FROM user WHERE username = ? AND password = ?";
+	    try (PreparedStatement pstmt = DBConnection.getConnection().prepareStatement(sql)) {
+	    	pstmt.setString(1, username);
+	    	pstmt.setString(2, password);
 
-	public boolean loginUser(Connection connection, User user) throws SQLException {
-		String loginQuery = "SELECT * FROM users WHERE username = ? AND password = ?";
-		try (PreparedStatement preparedStatement = connection.prepareStatement(loginQuery)) {
-			preparedStatement.setString(1, user.getUsername());
-			preparedStatement.setString(2, user.getPassword());
+	        ResultSet resultSet = pstmt.executeQuery();
 
-			ResultSet resultSet = preparedStatement.executeQuery();
-			return resultSet.next();
-		}
+	        if (resultSet.next()) {
+	            // 로그인 성공 시 유저 ID 설정
+	            userId = resultSet.getInt("userId");
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+		System.out.println("ToDoListDAO: " + userId);
+	    return userId;
+	}
+	
+	/**
+	 * isUsernameExists<br>
+	 * 데이터 베이스에 이미 동일한 ID의 유저가 있는지 확인하는 기능
+	 *
+	 * @param username 유저 ID
+	 * @return 있으면 true, 없으면 false
+	 */
+	private static boolean isUsernameExists(String username) {
+	    String sql = "SELECT COUNT(*) FROM user WHERE username = ?";
+	    try (PreparedStatement pstmt = DBConnection.getConnection().prepareStatement(sql)) {
+	    	pstmt.setString(1, username);
+	        ResultSet resultSet = pstmt.executeQuery();
+	        resultSet.next();
+	        int count = resultSet.getInt(1);
+	        return count > 0;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return false;
 	}
 }
