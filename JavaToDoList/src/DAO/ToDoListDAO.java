@@ -135,8 +135,9 @@ public class ToDoListDAO {
 	 * incomplete =  종료한 리스트 불러오기(종료 날짜 순 & 중요도 순) <br>
 	 * @return todoList
 	 */
-	public List<ToDoList> getTodoList(String filter) {
+	public static List<ToDoList> getTodoList(String filter) {
 		List<ToDoList> todoList = new LinkedList<>();
+		String sql;
 		try {
 	        if ("all".equals(filter)) {
 	            // 전체 내용 가져오기(종료 날짜 순 & 중요도 순)
