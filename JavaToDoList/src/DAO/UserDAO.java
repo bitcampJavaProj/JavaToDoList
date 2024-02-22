@@ -3,6 +3,7 @@ package DAO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import DTO.User;
 import mysql.DBConnection;
 
 public class UserDAO {
@@ -15,21 +16,23 @@ public class UserDAO {
 	 * @param password 유저 PW
 	 * @return 가입성공 여부 0 = false, 1 = true, 2 = 사용중인 아이디
 	 */
-	public static int insertUser(String username, String password) throws Exception {
+	public static int insertUser(User user) throws Exception {
 	    int result = 0;
 
 	    // 동일한 유저 있는지 확인
-	    if (isUsernameExists(username)) {
+	    if (isUsernameExists(user.getUsername())) {
 	        result = 2; // 동일 유저 있을시
-	        System.out.println("ToDoListDAO: 이미 사용중인 ID입니다. 다른 아이디를 작성해 주세요.");
+	        System.out.println("이미 사용중인 ID입니다. 다른 아이디를 작성해 주세요.");
 	        return result;
 	    }
 
 	    String sql = "INSERT INTO user (username, password) VALUES (?, ?)";
 	    try (PreparedStatement pstmt = DBConnection.getConnection().prepareStatement(sql)) {
-	        pstmt.setString(1, username);
-	        pstmt.setString(2, password);
-
+	    	System.out.println(user.getUsername());
+	    	
+	        pstmt.setString(1, user.getUsername());
+	        pstmt.setString(2, user.getPassword());
+	        
 	        result = pstmt.executeUpdate();
 	    } catch (Exception e) {
 	        e.printStackTrace();
@@ -47,12 +50,12 @@ public class UserDAO {
 	 * @param password 유저 PW
 	 * @return 유저 로그인 성공시 유저 고유 ID 반환, 실패시 0 반환
 	 */
-	public static int loginUser(String username, String password) throws Exception {
+	public static int loginUser(User user) throws Exception {
 	    int userId = 0;
 	    String sql = "SELECT userId FROM user WHERE username = ? AND password = ?";
 	    try (PreparedStatement pstmt = DBConnection.getConnection().prepareStatement(sql)) {
-	    	pstmt.setString(1, username);
-	    	pstmt.setString(2, password);
+	    	pstmt.setString(1, user.getUsername());
+	    	pstmt.setString(2, user.getPassword());
 
 	        ResultSet resultSet = pstmt.executeQuery();
 

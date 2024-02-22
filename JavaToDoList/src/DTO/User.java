@@ -9,7 +9,8 @@ public class User extends Cmd implements Serializable {
 	private String password;
 	
 	public User() {}
-	public User(String username, String password) {
+	public User(Integer cmd, String username, String password) {
+		this.cmd = cmd;
 		this.username = username;
 		this.password = password;
 	}
