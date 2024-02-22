@@ -5,24 +5,26 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import DTO.User;
+
 public class UserDAO {
-	public boolean insertUser(Connection connection, String userId, String username, String password)
+	public boolean insertUser(Connection connection, User user)
 			throws SQLException {
-		String insertQuery = "INSERT INTO users (userId, username, password) VALUES (?, ?, ?)";
+		String insertQuery = "INSERT INTO users (username, password) VALUES (?, ?)";
 		try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
-			preparedStatement.setString(1, username);
-			preparedStatement.setString(2, password);
+			preparedStatement.setString(1, user.getUsername());
+			preparedStatement.setString(2, user.getPassword());
 
 			int rowsAffected = preparedStatement.executeUpdate();
 			return rowsAffected > 0;
 		}
 	}
 
-	public boolean loginUser(Connection connection, String username, String password) throws SQLException {
-		String loginQuery = "SELECT * FROM users WHERE userId = ? AND password = ?";
+	public boolean loginUser(Connection connection, User user) throws SQLException {
+		String loginQuery = "SELECT * FROM users WHERE username = ? AND password = ?";
 		try (PreparedStatement preparedStatement = connection.prepareStatement(loginQuery)) {
-			preparedStatement.setString(1, username);
-			preparedStatement.setString(2, password);
+			preparedStatement.setString(1, user.getUsername());
+			preparedStatement.setString(2, user.getPassword());
 
 			ResultSet resultSet = preparedStatement.executeQuery();
 			return resultSet.next();
