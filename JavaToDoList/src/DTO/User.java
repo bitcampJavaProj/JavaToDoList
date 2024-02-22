@@ -7,6 +7,12 @@ public class User extends Cmd implements Serializable {
 	private Integer userId;
 	private String username;
 	private String password;
+	
+	public User() {}
+	public User(String username, String password) {
+		this.username = username;
+		this.password = password;
+	}
 
 	public Integer getUserId() {
 		return userId;

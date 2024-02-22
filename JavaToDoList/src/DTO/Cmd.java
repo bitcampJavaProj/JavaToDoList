@@ -12,6 +12,11 @@ public class Cmd implements Serializable {
 	private static final long serialVersionUID = 1L;
 	Integer cmd;
 	
+	public Cmd() {}
+	public Cmd(Integer cmd) {
+		this.cmd = cmd;
+	}
+	
 	public Integer getCmd() {
 		return cmd;
 	}
