@@ -7,20 +7,21 @@ import java.io.Serializable;
  * 
  * Cmd 클래스
  * : 명령어 관련 클래스
+ * @param <T>
  */
 public class Cmd implements Serializable {
 	private static final long serialVersionUID = 1L;
-	Integer cmd;
+	Object cmd;
 	
 	public Cmd() {}
-	public Cmd(Integer cmd) {
+	public Cmd(Object cmd) {
 		this.cmd = cmd;
 	}
 	
-	public Integer getCmd() {
+	public Object getCmd() {
 		return cmd;
 	}
-	public void setCmd(Integer cmd) {
+	public void setCmd(Object cmd) {
 		this.cmd = cmd;
 	}
 }
