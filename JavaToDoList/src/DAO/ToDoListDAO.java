@@ -135,10 +135,12 @@ public class ToDoListDAO {
 	 * completed =  완료한 리스트 불러오기(종료 날짜 순 & 중요도 순)<br>
 	 * incomplete =  종료한 리스트 불러오기(종료 날짜 순 & 중요도 순) <br>
 	 * @return todoList
+	 * @throws SQLException 
 	 */
-	public static List<ToDoList> getTodoList(String filter) {
+	public static List<ToDoList> getTodoList(String filter) throws SQLException {
 		List<ToDoList> todoList = new LinkedList<>();
 		String sql;
+		PreparedStatement ps = null;
 		try {
 	        if ("all".equals(filter)) {
 	            // 전체 내용 가져오기(종료 날짜 순 & 중요도 순)
@@ -153,7 +155,7 @@ public class ToDoListDAO {
 	            throw new IllegalArgumentException("Invalid filter value. Supported values: 'all', 'completed', 'incomplete'");
 	        }
 			
-			PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
+			ps = DBConnection.getConnection().prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 			
 			while (rs.next()) {
@@ -183,6 +185,8 @@ public class ToDoListDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			ps.close();
 		}
 		System.out.println(todoList);
 		
