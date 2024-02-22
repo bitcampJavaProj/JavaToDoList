@@ -14,8 +14,6 @@ import DTO.ToDoList;
 import mysql.DBConnection;
 
 public class ToDoListDAO {
-	private PreparedStatement pstmt;
-	private String sql;
 	
 	public ToDoListDAO() {}
 	
@@ -32,10 +30,11 @@ public class ToDoListDAO {
 	 * 
 	 * @return result
 	 */
-	public int insertToDoList(Connection conn, ToDoList toDoList) throws Exception {
+	public static int insertToDoList(Connection conn, ToDoList toDoList) throws Exception {
 		int result = 0;
+		PreparedStatement pstmt = null;
 		try {
-			sql = "insert into todolist (userId, title, content, createDate, closedDate, priority) ";
+			String sql = "insert into todolist (userId, title, content, createDate, closedDate, priority) ";
 			sql += "values (?, ?, ?, ?, ?, ?)";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -68,10 +67,11 @@ public class ToDoListDAO {
 	 * 
 	 * @return result
 	 */
-	public int deleteToDoList(Connection conn, ToDoList toDoList) throws Exception {
+	public static int deleteToDoList(Connection conn, ToDoList toDoList) throws Exception {
 		int result = 0;
+		PreparedStatement pstmt = null;
 		try {
-			sql = "update todolist set isDeleted = 1 where userId = ? and toDoListId = ?";
+			String sql = "update todolist set isDeleted = 1 where userId = ? and toDoListId = ?";
 			
 			pstmt = conn.prepareStatement(sql);
 			
@@ -99,10 +99,11 @@ public class ToDoListDAO {
 	 * 
 	 * @return result
 	 */
-	public int updateToDoList(Connection conn, ToDoList toDoList) throws Exception {
+	public static int updateToDoList(Connection conn, ToDoList toDoList) throws Exception {
 		int result = 0;
+		PreparedStatement pstmt = null;
 		try {
-			sql = "update todolist set title = ?, content=?, closedDate = ?, priority = ?, isComplete = ? where userId = ?";
+			String sql = "update todolist set title = ?, content=?, closedDate = ?, priority = ?, isComplete = ? where userId = ?";
 			
 			pstmt = conn.prepareStatement(sql);
 			
