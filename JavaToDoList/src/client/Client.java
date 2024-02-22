@@ -6,12 +6,16 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Scanner;
 
+import DAO.UserDAO;
 import DTO.Cmd;
+import DTO.ToDoList;
 import DTO.User;
+import mysql.DBConnection;
 
 public class Client {
 	private static final String SERVER_IP = "localhost";
 	private static final int SERVER_PORT = 9000;
+	private static Integer userId;
 
 	public static void main(String[] args) throws Exception {
 		// 클라이언트가 서버 연결 후 서버 데이터 불러오기, 사용자 입력을 서버에 전송
@@ -26,19 +30,21 @@ public class Client {
 				if (!isLoggedIn) {
 					// 로그인하지 않은 경우
 					displayLoginMenu(scanner);
-					int loginChoice = scanner.nextInt();
-					scanner.nextLine(); // Consume newline
+					String loginChoice = scanner.nextLine();
 
 					switch (loginChoice) {
-					case ServiceMenu.회원가입:
+					case "회원가입":
 						//Cmd cmd = new Cmd(ServiceMenu.회원가입);
 						//oos.writeObject(cmd);
 						oos.writeObject(handleSignUp(scanner));
 						break;
-					case ServiceMenu.로그인:
-						oos.writeObject(handleLogin(scanner));
+					case "로그인":
+						User user = handleLogin(scanner);
+						userId = UserDAO.loginUser(DBConnection.getConnection(), user);
+						oos.writeObject(user);
+						isLoggedIn = true;
 						break;
-					case ServiceMenu.로그아웃:
+					case "로그아웃":
 						System.out.println("프로그램 종료");
 						return;
 					default:
@@ -49,11 +55,10 @@ public class Client {
 					// 로그인한 경우
 					displayMainMenu(scanner);
 					int mainMenuChoice = scanner.nextInt();
-					scanner.nextLine(); // Consume newline
 
 					switch (mainMenuChoice) {
 					case ServiceMenu2.투두리스트_작성:
-//						handleToDoListCreation(scanner);
+						handleToDoListCreation(scanner);
 						break;
 					case ServiceMenu2.투두리스트_삭제:
 						
@@ -96,9 +101,9 @@ public class Client {
 
 	private static void displayLoginMenu(Scanner scanner) {
 		System.out.println("----------옵션 선택----------");
-		System.out.println("1. 회원 가입");
-		System.out.println("2. 로그인");
-		System.out.println("3. 로그아웃");
+		System.out.println("회원가입");
+		System.out.println("로그인");
+		System.out.println("로그아웃");
 		System.out.println();
 	}
 
@@ -111,7 +116,7 @@ public class Client {
 		String password = scanner.nextLine();
 		
 		// 회원가입 정보를 서버로 전송
-		User user = new User(ServiceMenu.회원가입, username, password);
+		User user = new User("회원가입", username, password);
 		
 		return user;
 	}
@@ -125,7 +130,7 @@ public class Client {
 		String password = scanner.nextLine();
 
 		// 회원가입 정보를 서버로 전송
-		User user = new User(ServiceMenu.로그인, username, password);
+		User user = new User("로그인", username, password);
 		return user;
 	}
 
@@ -145,24 +150,26 @@ public class Client {
 		System.out.println();
 	}
 
-//	private static void handleToDoListCreation(Scanner scanner)
-//			throws IOException {
-//		// 투두리스트 작성 처리
-//		writer.println("----------투두리스트 작성----------");
-//		System.out.print("제목을 입력해주세요: ");
-//		writer.println(scanner.nextLine());
-//		System.out.print("할 일을 입력해주세요: ");
-//		writer.println(scanner.nextLine());
-//		System.out.print("마감일을 입력해주세요(예: 2024-02-19): ");
-//		writer.println(scanner.nextLine());
-//		System.out.print("우선순위를 숫자로 입력해주세요: ");
-//		writer.println(scanner.nextInt());
-//		scanner.nextLine(); // Consume newline
-//
-//		// 서버로부터 결과 수신
-//		String result = reader.readLine();
-//		System.out.println(result);
-//	}
+	private static ToDoList handleToDoListCreation(Scanner scanner)
+			throws IOException {
+		// 투두리스트 작성 처리
+		System.out.println("----------투두리스트 작성----------");
+		System.out.print("제목을 입력해주세요: ");
+		String title = scanner.next();
+		scanner.nextLine();
+		System.out.print("할 일을 입력해주세요: ");
+		String content = scanner.next();
+		scanner.nextLine();
+		System.out.print("마감일을 입력해주세요(예: 2024-02-19): ");
+		String closedDate = scanner.next();
+		scanner.nextLine();
+		System.out.print("우선순위를 숫자로 입력해주세요: ");
+		Integer priority = scanner.nextInt();
+
+		ToDoList toDoList = new ToDoList(ServiceMenu2.투두리스트_작성, title, content, closedDate, priority);
+		
+		return toDoList;
+	}
 
 	private static void handleToDoListRetrieval(Scanner scanner, String str) throws IOException {
 		// 투두리스트 조회 처리
@@ -198,7 +205,7 @@ public class Client {
 //		String result = reader.readLine();
 //		System.out.println(result);
 //	}
-
+//
 //	private static void handleDiaryRetrieval(Scanner scanner)
 //			throws IOException {
 //		// 일기 조회 처리
