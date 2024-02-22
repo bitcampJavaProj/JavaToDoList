@@ -14,7 +14,12 @@ import java.util.Hashtable;
 
 import org.json.JSONObject;
 
+import DAO.ToDoListDAO;
 import DAO.UserDAO;
+import DTO.Cmd;
+import DTO.ToDoList;
+import client.ServiceMenu;
+import client.ServiceMenu2;
 import mysql.DBConnection;
 
 public class Server {
@@ -63,8 +68,8 @@ class WorkerThread extends Thread {
 			System.out.printf("<서버-%s>%s로부터 접속했습니다.\n", getName(), inetAddr.getHostAddress());
 			OutputStream out = socket.getOutputStream();
 			InputStream in = socket.getInputStream();
+//			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 			PrintWriter pw = new PrintWriter(new OutputStreamWriter(out));
-//			BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 			
 			while(true) {
@@ -86,13 +91,14 @@ class WorkerThread extends Thread {
 		}
 	}
 	
-	private void processPacket(JSONObject packetObj) throws IOException {
-		// 클라이언트에 응답을 하기 위한 json 오브젝트
-		JSONObject ackObj = new JSONObject();
+	private void processPacket(Object packetObj) throws Exception {
+		// 클라이언트에 응답을 하기 위한 오브젝트
+		Object ackObj = new Object();
 		// 어떤 종류의 패킷을 보냈는지 분류하기 위한 정보
-		String cmd = packetObj.getString("cmd");
+//		Integer cmd = packetObj.getInt("cmd");
+		Cmd cmdObj = (Cmd)packetObj;
 		
-		if(cmd.equals("join")) {
+		if(cmdObj.getCmd() == ServiceMenu.회원가입) {
 			try {
 				UserDAO.insertUser("idididid", "pwpww");  //example!!
 				
@@ -100,7 +106,7 @@ class WorkerThread extends Thread {
 				e.printStackTrace();
 			}
 			
-		} else if(cmd.equals("login")) {
+		} else if(cmdObj.getCmd() == ServiceMenu.로그인) {
 			
 			try {
 				UserDAO.loginUser("ididididid", "pwpwpwpwpw");  //example!!
@@ -108,17 +114,56 @@ class WorkerThread extends Thread {
 				e.printStackTrace();
 			}
 			
-			// 여기에서 기능이 구현되지 않을까....
-		}  else if(cmd.equals("QUIT")) {
-			String id = packetObj.getString("id");
+			ToDoListDAO toDoListDAO = new ToDoListDAO();
+			ToDoList toDoListObj = (ToDoList)cmdObj;
 			
-			System.out.printf("<서버-%s> Id=%s QUIT 요청 \n", getName(), id);
+			switch (cmdObj.getCmd()) {
+			case ServiceMenu2.투두리스트_작성: 
+				toDoListDAO.insertToDoList(DBConnection.getConnection(), toDoListObj);
+				break;
+			case ServiceMenu2.투두리스트_삭제: 
+				toDoListDAO.deleteToDoList(DBConnection.getConnection(), toDoListObj);
+				break;
+			case ServiceMenu2.투두리스트_수정: 
+				toDoListDAO.updateToDoList(DBConnection.getConnection(), toDoListObj);
+				break;
+			case ServiceMenu2.투두리스트_전체_조회: 
+				
+				break;
+			case ServiceMenu2.투두리스트_완료: 
+				
+				break;
+			case ServiceMenu2.투두리스트_미완료: 
+				
+				break;
+			case ServiceMenu2.다이어리_작성: 
+				
+				break;
+			case ServiceMenu2.다이어리_삭제: 
+				
+				break;
+			case ServiceMenu2.다이어리_수정: 
+				
+				break;
+			case ServiceMenu2.다이어리_전체_조회: 
+				
+				break;
+			case ServiceMenu2.다이어리_특정날짜: 
+				
+				break;
+			}
+			
+			// 여기에서 기능이 구현되지 않을까....
+		}  else if(cmdObj.getCmd() == ServiceMenu.로그아웃) {
+//			String id = packetObj.getString("id");
+			
+//			System.out.printf("<서버-%s> Id=%s 로그아웃 요청 \n", getName(), id);
 			
 			// 관리에서 제외
-			ht.remove(id);
-			
-			ackObj.put("cmd", "QUIT");
-			ackObj.put("id", id);
+//			ht.remove(id);
+//			
+//			ackObj.put("cmd", "QUIT");
+//			ackObj.put("id", id);
 			String ack = ackObj.toString();
 			// 클라이언트한테 전송
 			OutputStream out = this.socket.getOutputStream();
@@ -128,24 +173,3 @@ class WorkerThread extends Thread {
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
