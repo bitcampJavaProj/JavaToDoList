@@ -11,7 +11,7 @@ import DTO.User;
 
 public class Client {
 	private static final String SERVER_IP = "localhost";
-	private static final int SERVER_PORT = 9999;
+	private static final int SERVER_PORT = 9000;
 
 	public static void main(String[] args) throws Exception {
 		// 클라이언트가 서버 연결 후 서버 데이터 불러오기, 사용자 입력을 서버에 전송
@@ -31,11 +31,12 @@ public class Client {
 
 					switch (loginChoice) {
 					case ServiceMenu.회원가입:
+						//Cmd cmd = new Cmd(ServiceMenu.회원가입);
+						//oos.writeObject(cmd);
 						oos.writeObject(handleSignUp(scanner));
-						
 						break;
 					case ServiceMenu.로그인:
-						isLoggedIn = handleLogin(scanner);
+						oos.writeObject(handleLogin(scanner));
 						break;
 					case ServiceMenu.로그아웃:
 						System.out.println("프로그램 종료");
@@ -52,30 +53,33 @@ public class Client {
 
 					switch (mainMenuChoice) {
 					case ServiceMenu2.투두리스트_작성:
-						handleToDoListCreation(scanner);
+//						handleToDoListCreation(scanner);
 						break;
 					case ServiceMenu2.투두리스트_삭제:
 						
 						break;
 					case ServiceMenu2.투두리스트_수정:
-						handleToDoListRetrieval(scanner);
+						
 						break;
 					case ServiceMenu2.투두리스트_전체_조회:
-						
+//						handleToDoListRetrieval(scanner);
 						break;
 					case ServiceMenu2.투두리스트_완료:
-						
+//						handleToDoListRetrieval(scanner);
+						break;
+					case ServiceMenu2.투두리스트_미완료:
+//						handleToDoListRetrieval(scanner);
 						break;
 					case ServiceMenu2.다이어리_작성:
-						handleDiaryEntry(scanner);
+//						handleDiaryEntry(scanner);
 						break;
 					case ServiceMenu2.다이어리_삭제:
-						handleDiaryDeletion(scanner);
+//						handleDiaryDeletion(scanner);
 						break;
 					case ServiceMenu2.다이어리_수정:
 						break;
 					case ServiceMenu2.다이어리_전체_조회:
-						handleDiaryRetrieval(scanner);
+//						handleDiaryRetrieval(scanner);
 						break;
 					case ServiceMenu2.다이어리_특정날짜:
 						break;
@@ -107,23 +111,22 @@ public class Client {
 		String password = scanner.nextLine();
 		
 		// 회원가입 정보를 서버로 전송
-		Cmd cmd = new Cmd(ServiceMenu.회원가입);
-		User user = new User(username, password);
+		User user = new User(ServiceMenu.회원가입, username, password);
+		
 		return user;
 	}
 
-	private static boolean handleLogin(Scanner scanner) throws IOException {
+	private static User handleLogin(Scanner scanner) throws IOException {
 		// 로그인 처리
 		System.out.println("----------로그인----------");
 		System.out.print("ID를 입력해주세요: ");
-		writer.println(scanner.nextLine());
+		String username = scanner.nextLine();
 		System.out.print("비밀번호를 입력해주세요: ");
-		writer.println(scanner.nextLine());
+		String password = scanner.nextLine();
 
-		// 서버로부터 로그인 결과 수신
-		String loginResult = reader.readLine();
-		System.out.println(loginResult);
-		return loginResult.equals("로그인 성공");
+		// 회원가입 정보를 서버로 전송
+		User user = new User(ServiceMenu.로그인, username, password);
+		return user;
 	}
 
 	private static void displayMainMenu(Scanner scanner) {
@@ -142,57 +145,71 @@ public class Client {
 		System.out.println();
 	}
 
-	private static void handleToDoListCreation(Scanner scanner)
-			throws IOException {
-		// 투두리스트 작성 처리
-		writer.println("----------투두리스트 작성----------");
-		System.out.print("제목을 입력해주세요: ");
-		writer.println(scanner.nextLine());
-		System.out.print("할 일을 입력해주세요: ");
-		writer.println(scanner.nextLine());
-		System.out.print("마감일을 입력해주세요(예: 2024-02-19): ");
-		writer.println(scanner.nextLine());
-		System.out.print("우선순위를 숫자로 입력해주세요: ");
-		writer.println(scanner.nextInt());
-		scanner.nextLine(); // Consume newline
+//	private static void handleToDoListCreation(Scanner scanner)
+//			throws IOException {
+//		// 투두리스트 작성 처리
+//		writer.println("----------투두리스트 작성----------");
+//		System.out.print("제목을 입력해주세요: ");
+//		writer.println(scanner.nextLine());
+//		System.out.print("할 일을 입력해주세요: ");
+//		writer.println(scanner.nextLine());
+//		System.out.print("마감일을 입력해주세요(예: 2024-02-19): ");
+//		writer.println(scanner.nextLine());
+//		System.out.print("우선순위를 숫자로 입력해주세요: ");
+//		writer.println(scanner.nextInt());
+//		scanner.nextLine(); // Consume newline
+//
+//		// 서버로부터 결과 수신
+//		String result = reader.readLine();
+//		System.out.println(result);
+//	}
 
-		// 서버로부터 결과 수신
-		String result = reader.readLine();
-		System.out.println(result);
-	}
-
-	private static void handleToDoListRetrieval(Scanner scanner)
-			throws IOException {
+	private static void handleToDoListRetrieval(Scanner scanner, String str) throws IOException {
 		// 투두리스트 조회 처리
-		writer.println("----------투두리스트 조회----------");
+		System.out.println("----------투두리스트 조회----------");
+		System.out.println("1. 전체 조회");
+		System.out.println("2. 완료 리스트 조회");
+		System.out.println("3. 미완료 리스트 조회");
+		Integer num = scanner.nextInt();
+
+		if (num == 1) {
+			Cmd cmd = new Cmd(ServiceMenu2.투두리스트_전체_조회);
+		} else if (num == 2) {
+			Cmd cmd = new Cmd(ServiceMenu2.투두리스트_완료);
+		} else if (num == 3) {
+			Cmd cmd = new Cmd(ServiceMenu2.투두리스트_완료);
+		} else {
+			
+		}
+		
 		// 서버로부터 결과 수신 및 출력
 	}
 
-	private static void handleDiaryEntry(Scanner scanner)
-			throws IOException {
-		// 일기 작성 처리
-		writer.println("----------일기 작성----------");
-		System.out.print("제목을 입력해주세요: ");
-		writer.println(scanner.nextLine());
-		System.out.print("내용을 입력해주세요: ");
-		writer.println(scanner.nextLine());
+//	private static void handleDiaryEntry(Scanner scanner)
+//			throws IOException {
+//		// 일기 작성 처리
+//		writer.println("----------일기 작성----------");
+//		System.out.print("제목을 입력해주세요: ");
+//		writer.println(scanner.nextLine());
+//		System.out.print("내용을 입력해주세요: ");
+//		writer.println(scanner.nextLine());
+//
+//		// 서버로부터 결과 수신
+//		String result = reader.readLine();
+//		System.out.println(result);
+//	}
 
-		// 서버로부터 결과 수신
-		String result = reader.readLine();
-		System.out.println(result);
-	}
-
-	private static void handleDiaryRetrieval(Scanner scanner)
-			throws IOException {
-		// 일기 조회 처리
-		writer.println("----------일기 조회----------");
-		// 서버로부터 결과 수신 및 출력
-	}
-
-	private static void handleDiaryDeletion(Scanner scanner)
-			throws IOException {
-		// 일기 삭제 처리
-		writer.println("----------일기 삭제----------");
-		// 서버로부터 결과 수신 및 출력
-	}
+//	private static void handleDiaryRetrieval(Scanner scanner)
+//			throws IOException {
+//		// 일기 조회 처리
+//		writer.println("----------일기 조회----------");
+//		// 서버로부터 결과 수신 및 출력
+//	}
+//
+//	private static void handleDiaryDeletion(Scanner scanner)
+//			throws IOException {
+//		// 일기 삭제 처리
+//		writer.println("----------일기 삭제----------");
+//		// 서버로부터 결과 수신 및 출력
+//	}
 }

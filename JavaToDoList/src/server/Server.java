@@ -1,8 +1,6 @@
 package server;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -13,13 +11,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Hashtable;
 
-import org.json.JSONObject;
-
 import DAO.ToDoListDAO;
 import DAO.UserDAO;
 import DTO.Cmd;
 import DTO.Diary;
 import DTO.ToDoList;
+import DTO.User;
 import client.ServiceMenu;
 import client.ServiceMenu2;
 import mysql.DBConnection;
@@ -99,19 +96,20 @@ class WorkerThread extends Thread {
 		Object ackObj = new Object();
 		
 		cmdObj = (Cmd)packetObj;
-		
 		if(cmdObj.getCmd() == ServiceMenu.회원가입) {
 			try {
-				UserDAO.insertUser("idididid", "pwpww");  //example!!
-				
+				if (cmdObj instanceof User) {
+					User userObj = (User)cmdObj;
+					UserDAO.insertUser(userObj);
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			
 		} else if(cmdObj.getCmd() == ServiceMenu.로그인) {
-			
 			try {
-				UserDAO.loginUser("ididididid", "pwpwpwpwpw");  //example!!
+				User userObj = (User)cmdObj;
+				UserDAO.loginUser(userObj);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -157,8 +155,6 @@ class WorkerThread extends Thread {
 				
 				break;
 			}
-			
-			// 여기에서 기능이 구현되지 않을까....
 		}  else if(cmdObj.getCmd() == ServiceMenu.로그아웃) {
 //			String id = packetObj.getString("id");
 			
