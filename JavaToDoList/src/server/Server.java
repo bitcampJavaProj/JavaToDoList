@@ -3,6 +3,8 @@ package server;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -13,7 +15,6 @@ import java.util.Hashtable;
 
 import org.json.JSONObject;
 
-import DAO.DiaryDAO;
 import DAO.ToDoListDAO;
 import DAO.UserDAO;
 import DTO.Cmd;
@@ -72,23 +73,21 @@ class WorkerThread extends Thread {
 			System.out.printf("<서버-%s>%s로부터 접속했습니다.\n", getName(), inetAddr.getHostAddress());
 			OutputStream out = socket.getOutputStream();
 			InputStream in = socket.getInputStream();
-//			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-			PrintWriter pw = new PrintWriter(new OutputStreamWriter(out));
-			BufferedReader br = new BufferedReader(new InputStreamReader(in));
-			
+			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+						
 			while(true) {
-				/*client가 json오브젝트를 string으로 변환해서 보낸 것을 수신*/
-				String line = br.readLine();
-				//System.out.println("raw data=" + line);
-				if(line == null)
+				/**
+				 * @author 서헤리
+				 * 
+				 * ObjectInputStream인 ois를 사용하여
+				 * 클라이언트로부터 전송된 객체를 수신함
+				 * 수신된 객체가 null일 경우 반복문 종료 + 스레드 실행 종료
+				 */
+				Object packetObj = ois.readObject();
+				if(packetObj == null)
 					break;
-				/*json패킷을 해석해서 알맞은 처리를 한다.
-				 * 문자열 -> JSONObject 변환 -> cmd를 해석해서 어떤 명령인지?
-				 * */
-				JSONObject packetObj = new JSONObject(line);
-				// 명령(cmd)당 알맞은 처리를 해줌
 				processPacket(packetObj);
-				
 			}
 		} catch (Exception e) {
 			System.out.printf("<서버-%s>%s\n", getName(), e.getMessage());
@@ -98,8 +97,7 @@ class WorkerThread extends Thread {
 	private void processPacket(Object packetObj) throws Exception {
 		// 클라이언트에 응답을 하기 위한 오브젝트
 		Object ackObj = new Object();
-		// 어떤 종류의 패킷을 보냈는지 분류하기 위한 정보
-//		Integer cmd = packetObj.getInt("cmd");
+		
 		cmdObj = (Cmd)packetObj;
 		
 		if(cmdObj.getCmd() == ServiceMenu.회원가입) {
