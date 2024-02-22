@@ -12,6 +12,4 @@ public interface ServiceMenu2 {
 	public int 다이어리_수정 = 9;
 	public int 다이어리_전체_조회 = 10;
 	public int 다이어리_특정날짜 = 11;
-	public int FIND_CLOSED_VOTE = 12;
-	public int FIND_VOTE_RESULT = 13;
 }
