@@ -17,7 +17,6 @@ import DTO.Cmd;
 import DTO.Diary;
 import DTO.ToDoList;
 import DTO.User;
-import client.ServiceMenu;
 import client.ServiceMenu2;
 import mysql.DBConnection;
 
@@ -96,7 +95,7 @@ class WorkerThread extends Thread {
 		Object ackObj = new Object();
 		
 		cmdObj = (Cmd)packetObj;
-		if(cmdObj.getCmd() == ServiceMenu.회원가입) {
+		if(cmdObj.getCmd().equals("회원가입")) {
 			try {
 				if (cmdObj instanceof User) {
 					User userObj = (User)cmdObj;
@@ -106,10 +105,10 @@ class WorkerThread extends Thread {
 				e.printStackTrace();
 			}
 			
-		} else if(cmdObj.getCmd() == ServiceMenu.로그인) {
+		} else if(cmdObj.getCmd().equals("로그인")) {
 			try {
 				User userObj = (User)cmdObj;
-				UserDAO.loginUser(userObj);
+				UserDAO.loginUser(DBConnection.getConnection(), userObj);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -120,7 +119,7 @@ class WorkerThread extends Thread {
 				diaryObj = (Diary)cmdObj;
 			}
 
-			switch (cmdObj.getCmd()) {
+			switch ((int)cmdObj.getCmd()) {
 			case ServiceMenu2.투두리스트_작성: 
 				ToDoListDAO.insertToDoList(DBConnection.getConnection(), toDoListObj);
 				break;
@@ -155,7 +154,7 @@ class WorkerThread extends Thread {
 				
 				break;
 			}
-		}  else if(cmdObj.getCmd() == ServiceMenu.로그아웃) {
+		}  else if(cmdObj.getCmd().equals("로그아웃")) {
 //			String id = packetObj.getString("id");
 			
 //			System.out.printf("<서버-%s> Id=%s 로그아웃 요청 \n", getName(), id);
