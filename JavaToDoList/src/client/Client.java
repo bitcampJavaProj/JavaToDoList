@@ -1,70 +1,86 @@
 package client;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.Scanner;
+
+import DTO.Cmd;
+import DTO.User;
 
 public class Client {
 	private static final String SERVER_IP = "localhost";
 	private static final int SERVER_PORT = 9999;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		// 클라이언트가 서버 연결 후 서버 데이터 불러오기, 사용자 입력을 서버에 전송
-		try (Socket socket = new Socket(SERVER_IP, SERVER_PORT);
-				BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-				PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
-				Scanner scanner = new Scanner(System.in)) {
-			
+		Socket socket = new Socket(SERVER_IP, SERVER_PORT);
+		ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+		ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+		Scanner scanner = new Scanner(System.in);
+		try {
 			boolean isLoggedIn = false;
 
 			while (true) {
 				if (!isLoggedIn) {
 					// 로그인하지 않은 경우
-					displayLoginMenu(scanner, writer, reader);
+					displayLoginMenu(scanner);
 					int loginChoice = scanner.nextInt();
 					scanner.nextLine(); // Consume newline
 
 					switch (loginChoice) {
-					case 1:
-						isLoggedIn = handleSignUp(scanner, writer, reader);
+					case ServiceMenu.회원가입:
+						oos.writeObject(handleSignUp(scanner));
+						
 						break;
-					case 2:
-						isLoggedIn = handleLogin(scanner, writer, reader);
+					case ServiceMenu.로그인:
+						isLoggedIn = handleLogin(scanner);
 						break;
-					case 0:
+					case ServiceMenu.로그아웃:
 						System.out.println("프로그램 종료");
 						return;
 					default:
-						System.out.println("0~2 사이의 값을 입력해주세요.");
+						System.out.println("1~3 사이의 값을 입력해주세요.");
 						break;
 					}
 				} else {
 					// 로그인한 경우
-					displayMainMenu(scanner, writer);
+					displayMainMenu(scanner);
 					int mainMenuChoice = scanner.nextInt();
 					scanner.nextLine(); // Consume newline
 
 					switch (mainMenuChoice) {
-					case 1:
-						handleToDoListCreation(scanner, writer, reader);
+					case ServiceMenu2.투두리스트_작성:
+						handleToDoListCreation(scanner);
 						break;
-					case 2:
-						handleToDoListRetrieval(scanner, writer, reader);
+					case ServiceMenu2.투두리스트_삭제:
+						
 						break;
-					case 3:
-						handleDiaryEntry(scanner, writer, reader);
+					case ServiceMenu2.투두리스트_수정:
+						handleToDoListRetrieval(scanner);
 						break;
-					case 4:
-						handleDiaryRetrieval(scanner, writer, reader);
+					case ServiceMenu2.투두리스트_전체_조회:
+						
 						break;
-					case 5:
-						handleDiaryDeletion(scanner, writer, reader);
+					case ServiceMenu2.투두리스트_완료:
+						
 						break;
-					case 6:
-						isLoggedIn = false; // 로그아웃
+					case ServiceMenu2.다이어리_작성:
+						handleDiaryEntry(scanner);
+						break;
+					case ServiceMenu2.다이어리_삭제:
+						handleDiaryDeletion(scanner);
+						break;
+					case ServiceMenu2.다이어리_수정:
+						break;
+					case ServiceMenu2.다이어리_전체_조회:
+						handleDiaryRetrieval(scanner);
+						break;
+					case ServiceMenu2.다이어리_특정날짜:
 						break;
 					default:
-						System.out.println("0~6 사이의 값을 입력해주세요.");
+						System.out.println("1~11 사이의 값을 입력해주세요.");
 						break;
 					}
 				}
@@ -74,31 +90,31 @@ public class Client {
 		}
 	}
 
-	private static void displayLoginMenu(Scanner scanner, PrintWriter writer, BufferedReader reader) {
+	private static void displayLoginMenu(Scanner scanner) {
 		System.out.println("----------옵션 선택----------");
 		System.out.println("1. 회원 가입");
 		System.out.println("2. 로그인");
-		System.out.println("0. 종료");
+		System.out.println("3. 로그아웃");
 		System.out.println();
 	}
 
-	private static boolean handleSignUp(Scanner scanner, PrintWriter writer, BufferedReader reader) throws IOException {
+	private static User handleSignUp(Scanner scanner) throws IOException {
 		// 회원 가입 처리
-		writer.println("----------회원가입----------");
+		System.out.println("----------회원가입----------");
 		System.out.print("사용하실 ID를 입력해주세요: ");
-		writer.println(scanner.nextLine());
+		String username = scanner.nextLine();
 		System.out.print("비밀번호를 입력해주세요: ");
-		writer.println(scanner.nextLine());
-
-		// 서버로부터 회원 가입 결과 수신
-		String signupResult = reader.readLine();
-		System.out.println(signupResult);
-		return signupResult.equals("회원가입이 완료되었습니다.");
+		String password = scanner.nextLine();
+		
+		// 회원가입 정보를 서버로 전송
+		Cmd cmd = new Cmd(ServiceMenu.회원가입);
+		User user = new User(username, password);
+		return user;
 	}
 
-	private static boolean handleLogin(Scanner scanner, PrintWriter writer, BufferedReader reader) throws IOException {
+	private static boolean handleLogin(Scanner scanner) throws IOException {
 		// 로그인 처리
-		writer.println("----------로그인----------");
+		System.out.println("----------로그인----------");
 		System.out.print("ID를 입력해주세요: ");
 		writer.println(scanner.nextLine());
 		System.out.print("비밀번호를 입력해주세요: ");
@@ -110,18 +126,23 @@ public class Client {
 		return loginResult.equals("로그인 성공");
 	}
 
-	private static void displayMainMenu(Scanner scanner, PrintWriter writer) {
+	private static void displayMainMenu(Scanner scanner) {
 		System.out.println("----------옵션 선택----------");
 		System.out.println("1. 투두리스트 작성");
-		System.out.println("2. 투두리스트 조회");
-		System.out.println("3. 일기 작성");
-		System.out.println("4. 일기 조회");
-		System.out.println("5. 일기 삭제");
-		System.out.println("6. 로그아웃");
+		System.out.println("2. 투두리스트 삭제");
+		System.out.println("3. 투두리스트 수정");
+		System.out.println("4. 투두리스트 전체 조회");
+		System.out.println("5. 완료된 투두리스트 조회");
+		System.out.println("6. 미완료된 투두리스트 조회");
+		System.out.println("7. 일기 작성");
+		System.out.println("8. 일기 삭제");
+		System.out.println("9. 일기 수정");
+		System.out.println("10. 일기 전체 조회");
+		System.out.println("11. 작성 날짜로 일기 조회");
 		System.out.println();
 	}
 
-	private static void handleToDoListCreation(Scanner scanner, PrintWriter writer, BufferedReader reader)
+	private static void handleToDoListCreation(Scanner scanner)
 			throws IOException {
 		// 투두리스트 작성 처리
 		writer.println("----------투두리스트 작성----------");
@@ -140,14 +161,14 @@ public class Client {
 		System.out.println(result);
 	}
 
-	private static void handleToDoListRetrieval(Scanner scanner, PrintWriter writer, BufferedReader reader)
+	private static void handleToDoListRetrieval(Scanner scanner)
 			throws IOException {
 		// 투두리스트 조회 처리
 		writer.println("----------투두리스트 조회----------");
 		// 서버로부터 결과 수신 및 출력
 	}
 
-	private static void handleDiaryEntry(Scanner scanner, PrintWriter writer, BufferedReader reader)
+	private static void handleDiaryEntry(Scanner scanner)
 			throws IOException {
 		// 일기 작성 처리
 		writer.println("----------일기 작성----------");
@@ -161,14 +182,14 @@ public class Client {
 		System.out.println(result);
 	}
 
-	private static void handleDiaryRetrieval(Scanner scanner, PrintWriter writer, BufferedReader reader)
+	private static void handleDiaryRetrieval(Scanner scanner)
 			throws IOException {
 		// 일기 조회 처리
 		writer.println("----------일기 조회----------");
 		// 서버로부터 결과 수신 및 출력
 	}
 
-	private static void handleDiaryDeletion(Scanner scanner, PrintWriter writer, BufferedReader reader)
+	private static void handleDiaryDeletion(Scanner scanner)
 			throws IOException {
 		// 일기 삭제 처리
 		writer.println("----------일기 삭제----------");
