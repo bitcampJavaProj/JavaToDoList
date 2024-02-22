@@ -1,8 +1,10 @@
 package DTO;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class ToDoList {
+public class ToDoList extends Cmd implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private Integer toDoListId;
 	private Integer userId;
 	private String title;
