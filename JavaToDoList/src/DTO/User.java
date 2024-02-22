@@ -1,7 +1,9 @@
 package DTO;
 
-public class User {
+import java.io.Serializable;
 
+public class User extends Cmd implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private Integer userId;
 	private String username;
 	private String password;
