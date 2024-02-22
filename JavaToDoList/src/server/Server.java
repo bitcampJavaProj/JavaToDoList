@@ -1,7 +1,6 @@
 package server;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -14,9 +13,11 @@ import java.util.Hashtable;
 
 import org.json.JSONObject;
 
+import DAO.DiaryDAO;
 import DAO.ToDoListDAO;
 import DAO.UserDAO;
 import DTO.Cmd;
+import DTO.Diary;
 import DTO.ToDoList;
 import client.ServiceMenu;
 import client.ServiceMenu2;
@@ -55,6 +56,9 @@ public class Server {
 class WorkerThread extends Thread {
 	private Socket socket;
 	private Hashtable<String, Socket> ht;
+	private Cmd cmdObj;
+	private ToDoList toDoListObj;
+	private Diary diaryObj;
 
 	public WorkerThread(Socket socket, Hashtable<String, Socket> ht) {
 		this.socket = socket;
@@ -96,7 +100,7 @@ class WorkerThread extends Thread {
 		Object ackObj = new Object();
 		// 어떤 종류의 패킷을 보냈는지 분류하기 위한 정보
 //		Integer cmd = packetObj.getInt("cmd");
-		Cmd cmdObj = (Cmd)packetObj;
+		cmdObj = (Cmd)packetObj;
 		
 		if(cmdObj.getCmd() == ServiceMenu.회원가입) {
 			try {
@@ -114,18 +118,21 @@ class WorkerThread extends Thread {
 				e.printStackTrace();
 			}
 			
-			ToDoListDAO toDoListDAO = new ToDoListDAO();
-			ToDoList toDoListObj = (ToDoList)cmdObj;
-			
+			if(cmdObj instanceof ToDoList) {
+				toDoListObj = (ToDoList)cmdObj;
+			} else if(cmdObj instanceof Diary) {
+				diaryObj = (Diary)cmdObj;
+			}
+
 			switch (cmdObj.getCmd()) {
 			case ServiceMenu2.투두리스트_작성: 
-				toDoListDAO.insertToDoList(DBConnection.getConnection(), toDoListObj);
+				ToDoListDAO.insertToDoList(DBConnection.getConnection(), toDoListObj);
 				break;
 			case ServiceMenu2.투두리스트_삭제: 
-				toDoListDAO.deleteToDoList(DBConnection.getConnection(), toDoListObj);
+				ToDoListDAO.deleteToDoList(DBConnection.getConnection(), toDoListObj);
 				break;
 			case ServiceMenu2.투두리스트_수정: 
-				toDoListDAO.updateToDoList(DBConnection.getConnection(), toDoListObj);
+				ToDoListDAO.updateToDoList(DBConnection.getConnection(), toDoListObj);
 				break;
 			case ServiceMenu2.투두리스트_전체_조회: 
 				
