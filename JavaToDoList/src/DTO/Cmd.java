@@ -8,7 +8,7 @@ import java.io.Serializable;
  * Cmd 클래스
  * : 명령어 관련 클래스
  */
-class Cmd implements Serializable {
+public class Cmd implements Serializable {
 	private static final long serialVersionUID = 1L;
 	String cmd;
 }
