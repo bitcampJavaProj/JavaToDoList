@@ -45,6 +45,12 @@ public class ToDoList extends Cmd implements Serializable {
 	      this.closedDate = closedDate;
 	      this.priority = priority; 
 	   }
+
+	
+	public ToDoList(Integer cmd, Integer userId) {
+	      this.cmd = cmd;
+	      this.userId = userId;
+	   }
 		
 	public Integer getToDoListId() {
 		return userId;

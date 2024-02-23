@@ -35,8 +35,8 @@ public class Client {
 
 					switch (loginChoice) {
 					case "회원가입":
-						//Cmd cmd = new Cmd(ServiceMenu.회원가입);
-						//oos.writeObject(cmd);
+						// Cmd cmd = new Cmd(ServiceMenu.회원가입);
+						// oos.writeObject(cmd);
 						oos.writeObject(handleSignUp(scanner));
 						break;
 					case "로그인":
@@ -69,28 +69,25 @@ public class Client {
 						break;
 					case ServiceMenu2.투두리스트_삭제:
 						Optional<ToDoList> optionalToDoList = handleToDoListDelete(scanner);
-                        optionalToDoList.ifPresentOrElse(
-                                toDoList -> {
-                                    try {
-                                        oos.writeObject(toDoList);
-                                        System.out.println("투두리스트 삭제가 완료되었습니다.");
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                },
-                                () -> System.out.println("투두리스트 삭제가 취소되었습니다.")
-                        );
+						optionalToDoList.ifPresentOrElse(toDoList -> {
+							try {
+								oos.writeObject(toDoList);
+								System.out.println("투두리스트 삭제가 완료되었습니다.");
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}, () -> System.out.println("투두리스트 삭제가 취소되었습니다."));
 					case ServiceMenu2.투두리스트_수정:
-						
+
 						break;
 					case ServiceMenu2.투두리스트_전체_조회:
-//						handleToDoListRetrieval(scanner);
+						oos.writeObject(handleToDoListAll()); 
 						break;
 					case ServiceMenu2.투두리스트_완료:
-//						handleToDoListRetrieval(scanner);
+						oos.writeObject(handleToDoListCom()); 
 						break;
 					case ServiceMenu2.투두리스트_미완료:
-//						handleToDoListRetrieval(scanner);
+						oos.writeObject(handleToDoListIncom()); 
 						break;
 					case ServiceMenu2.다이어리_작성:
 						oos.writeObject(handleDiaryEntry(scanner));
@@ -131,10 +128,10 @@ public class Client {
 		String username = scanner.nextLine();
 		System.out.print("비밀번호를 입력해주세요: ");
 		String password = scanner.nextLine();
-		
+
 		// 회원가입 정보를 서버로 전송
 		User user = new User("회원가입", username, password);
-		
+
 		return user;
 	}
 
@@ -167,8 +164,7 @@ public class Client {
 		System.out.println();
 	}
 
-	private static ToDoList handleToDoListCreation(Scanner scanner)
-			throws IOException {
+	private static ToDoList handleToDoListCreation(Scanner scanner) throws IOException {
 		// 투두리스트 작성 처리
 		System.out.println("----------투두리스트 작성----------");
 		System.out.print("제목을 입력해주세요: ");
@@ -184,53 +180,48 @@ public class Client {
 		Integer priority = scanner.nextInt();
 
 		ToDoList toDoList = new ToDoList(ServiceMenu2.투두리스트_작성, userId, title, content, closedDate, priority);
-		
+
 		return toDoList;
 	}
-	
-	private static Optional<ToDoList> handleToDoListDelete(Scanner scanner)
-			throws IOException {
+
+	private static Optional<ToDoList> handleToDoListDelete(Scanner scanner) throws IOException {
 		// 투두리스트 작성 처리
 		System.out.println("----------투두리스트 삭제----------");
 		System.out.print("삭제하실 투두리스트의 제목을 입력해주세요: ");
 		String title = scanner.next();
 		System.out.print("정말 삭제하시겠습니까?(Y/N) ");
 		String ack = scanner.next();
-		switch(ack) {
-        case "Y", "y":
-            ToDoList toDoList = new ToDoList(ServiceMenu2.투두리스트_삭제, userId, title, null, null, null);
-            return Optional.of(toDoList);
-        case "N", "n":
-            return Optional.empty();
-        default:
-            System.out.println("잘못된 입력입니다.");
-            return Optional.empty();
-    }
-	}
-
-	private static void handleToDoListRetrieval(Scanner scanner, String str) throws IOException {
-		// 투두리스트 조회 처리
-		System.out.println("----------투두리스트 조회----------");
-		System.out.println("1. 전체 조회");
-		System.out.println("2. 완료 리스트 조회");
-		System.out.println("3. 미완료 리스트 조회");
-		Integer num = scanner.nextInt();
-
-		if (num == 1) {
-			Cmd cmd = new Cmd(ServiceMenu2.투두리스트_전체_조회);
-		} else if (num == 2) {
-			Cmd cmd = new Cmd(ServiceMenu2.투두리스트_완료);
-		} else if (num == 3) {
-			Cmd cmd = new Cmd(ServiceMenu2.투두리스트_완료);
-		} else {
-			
+		switch (ack) {
+		case "Y", "y":
+			ToDoList toDoList = new ToDoList(ServiceMenu2.투두리스트_삭제, userId, title, null, null, null);
+			return Optional.of(toDoList);
+		case "N", "n":
+			return Optional.empty();
+		default:
+			System.out.println("잘못된 입력입니다.");
+			return Optional.empty();
 		}
-		
-		// 서버로부터 결과 수신 및 출력
 	}
 
-	private static Diary handleDiaryEntry(Scanner scanner)
-			throws IOException {
+	private static ToDoList handleToDoListAll() throws IOException {
+		System.out.println("----------투두리스트 전체 조회----------");
+		ToDoList toDoList = new ToDoList(ServiceMenu2.투두리스트_전체_조회, userId);
+		return toDoList;
+	}
+	
+	private static ToDoList handleToDoListCom() throws IOException {
+		System.out.println("----------투두리스트 전체 조회----------");
+		ToDoList toDoList = new ToDoList(ServiceMenu2.투두리스트_완료, userId);
+		return toDoList;
+	}
+	
+	private static ToDoList handleToDoListIncom() throws IOException {
+		System.out.println("----------투두리스트 전체 조회----------");
+		ToDoList toDoList = new ToDoList(ServiceMenu2.투두리스트_미완료, userId);
+		return toDoList;
+	}
+
+	private static Diary handleDiaryEntry(Scanner scanner) throws IOException {
 		// 일기 작성 처리
 		System.out.println("----------일기 작성----------");
 		System.out.print("제목을 입력해주세요: ");
@@ -240,11 +231,10 @@ public class Client {
 		String content = scanner.next();
 		scanner.nextLine();
 
-		
 		// 서버로부터 결과 수신
 		Diary diary = new Diary(ServiceMenu2.다이어리_작성, title, content, userId);
 		System.out.println(diary.toString());
-		
+
 		return diary;
 	}
 //
