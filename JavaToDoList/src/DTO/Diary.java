@@ -14,7 +14,19 @@ public class Diary extends Cmd implements Serializable {
 
    public Diary() {}
 
-   public Diary(Object cmd, String title, String content, Integer userId) {
+   public Diary(Object cmd, Integer diaryId, LocalDate createDate) {
+	this.cmd = cmd;
+	this.diaryId = diaryId;
+	this.createDate = createDate;
+}
+
+   
+public Diary(Object cmd, Integer userId) {
+	this.cmd = cmd;
+	this.userId = userId;
+}
+
+public Diary(Object cmd, String title, String content, Integer userId) {
 	   this.cmd = cmd;
 	   this.title = title;
 	   this.content = content;
