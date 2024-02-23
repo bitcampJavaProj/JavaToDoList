@@ -18,19 +18,19 @@ public class DiaryDAO {
     * @author 권재원 
     * 일기 작성
     */
-   public static int writeDiary(Connection conn, Diary diary, Integer userId) throws Exception {
+   public static int writeDiary(Connection conn, Diary diary) throws Exception {
       String sql;
       PreparedStatement pstmt = null;
       int result = 0;
 
       try {
          sql = "INSERT INTO DIARY (title, content, userId)";
-         sql += " VALUES (?, ?, ?, ?)";
+         sql += " VALUES (?, ?, ?)";
 
          pstmt = conn.prepareStatement(sql);
          pstmt.setString(1, diary.getTitle());
          pstmt.setString(2, diary.getContent());
-         pstmt.setInt(3, userId);
+         pstmt.setInt(3, diary.getUserId());
 
          result = pstmt.executeUpdate();
       } catch (Exception e) {
@@ -38,6 +38,7 @@ public class DiaryDAO {
       } finally {
          pstmt.close();
       }
+      
 
       return result;
    }
