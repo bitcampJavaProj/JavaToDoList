@@ -205,7 +205,7 @@ public class Client {
 		System.out.println("----------투두리스트 전체 조회----------");
 		ToDoList toDoList = new ToDoList(ServiceMenu2.투두리스트_전체_조회, userId);
 		try {
-			ToDoListDAO.getTodoList("completed", toDoList);
+			ToDoListDAO.getTodoList("all", toDoList);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -227,7 +227,7 @@ public class Client {
 		System.out.println("----------미완료된 투두리스트 조회----------");
 		ToDoList toDoList = new ToDoList(ServiceMenu2.투두리스트_미완료, userId);
 		try {
-			ToDoListDAO.getTodoList("completed", toDoList);
+			ToDoListDAO.getTodoList("incomplete", toDoList);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
