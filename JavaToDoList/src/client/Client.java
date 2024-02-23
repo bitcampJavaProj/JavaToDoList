@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import DAO.UserDAO;
 import DTO.Cmd;
+import DTO.Diary;
 import DTO.ToDoList;
 import DTO.User;
 import mysql.DBConnection;
@@ -57,6 +58,8 @@ public class Client {
 					}
 				} else {
 					// 로그인한 경우
+					oos.reset();
+					oos.flush();
 					displayMainMenu(scanner);
 					int mainMenuChoice = scanner.nextInt();
 
@@ -80,7 +83,7 @@ public class Client {
 //						handleToDoListRetrieval(scanner);
 						break;
 					case ServiceMenu2.다이어리_작성:
-//						handleDiaryEntry(scanner);
+						oos.writeObject(handleDiaryEntry(scanner));
 						break;
 					case ServiceMenu2.다이어리_삭제:
 //						handleDiaryDeletion(scanner);
@@ -196,19 +199,24 @@ public class Client {
 		// 서버로부터 결과 수신 및 출력
 	}
 
-//	private static void handleDiaryEntry(Scanner scanner)
-//			throws IOException {
-//		// 일기 작성 처리
-//		writer.println("----------일기 작성----------");
-//		System.out.print("제목을 입력해주세요: ");
-//		writer.println(scanner.nextLine());
-//		System.out.print("내용을 입력해주세요: ");
-//		writer.println(scanner.nextLine());
-//
-//		// 서버로부터 결과 수신
-//		String result = reader.readLine();
-//		System.out.println(result);
-//	}
+	private static Diary handleDiaryEntry(Scanner scanner)
+			throws IOException {
+		// 일기 작성 처리
+		System.out.println("----------일기 작성----------");
+		System.out.print("제목을 입력해주세요: ");
+		String title = scanner.next();
+		scanner.nextLine();
+		System.out.print("내용을 입력해주세요: ");
+		String content = scanner.next();
+		scanner.nextLine();
+
+		
+		// 서버로부터 결과 수신
+		Diary diary = new Diary(ServiceMenu2.다이어리_작성, title, content, userId);
+		System.out.println(diary.toString());
+		
+		return diary;
+	}
 //
 //	private static void handleDiaryRetrieval(Scanner scanner)
 //			throws IOException {

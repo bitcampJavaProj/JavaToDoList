@@ -14,9 +14,15 @@ public class Diary extends Cmd implements Serializable {
 
    public Diary() {}
 
+   public Diary(Object cmd, String title, String content, Integer userId) {
+	   this.cmd = cmd;
+	   this.title = title;
+	   this.content = content;
+	   this.userId = userId;
+   }
+
    public Diary(Integer diaryId, String title, String content, Integer userId, LocalDate createDate,
          Boolean isDeleted) {
-      super();
       this.diaryId = diaryId;
       this.title = title;
       this.content = content;
@@ -75,7 +81,7 @@ public class Diary extends Cmd implements Serializable {
 
    @Override
    public String toString() {
-      String str = String.format("제목: %s\n내용: %s\n작성자id: %d\n생성 날짜: %s\n삭제 여부: %b\n", title, content, userId, createDate);
+      String str = String.format("제목: %s\n내용: %s\n작성자id: %d\n생성 날짜: %s\n", title, content, userId, createDate);
 
       return str;
    }
