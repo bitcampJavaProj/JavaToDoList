@@ -65,7 +65,7 @@ public class Client {
 
 					switch (mainMenuChoice) {
 					case ServiceMenu2.투두리스트_작성:
-						handleToDoListCreation(scanner);
+						oos.writeObject(handleToDoListCreation(scanner));
 						break;
 					case ServiceMenu2.투두리스트_삭제:
 						
@@ -173,7 +173,7 @@ public class Client {
 		System.out.print("우선순위를 숫자로 입력해주세요: ");
 		Integer priority = scanner.nextInt();
 
-		ToDoList toDoList = new ToDoList(ServiceMenu2.투두리스트_작성, title, content, closedDate, priority);
+		ToDoList toDoList = new ToDoList(ServiceMenu2.투두리스트_작성, userId, title, content, closedDate, priority);
 		
 		return toDoList;
 	}
