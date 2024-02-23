@@ -1,14 +1,16 @@
 package client;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 import DAO.UserDAO;
-import DTO.Cmd;
 import DTO.Diary;
 import DTO.ToDoList;
 import DTO.User;
@@ -165,27 +167,22 @@ public class Client {
 	}
 
 	private static ToDoList handleToDoListCreation(Scanner scanner) throws IOException {
-		// 투두리스트 작성 처리
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		System.out.println("----------투두리스트 작성----------");
 		System.out.print("제목을 입력해주세요: ");
-		String title = scanner.next();
-		scanner.nextLine();
+		String title = br.readLine();
 		System.out.print("할 일을 입력해주세요: ");
-		String content = scanner.next();
-		scanner.nextLine();
+		String content = br.readLine();
 		System.out.print("마감일을 입력해주세요(예: 2024-02-19): ");
-		String closedDate = scanner.next();
-		scanner.nextLine();
+		String closedDate = br.readLine();
 		System.out.print("우선순위를 숫자로 입력해주세요: ");
-		Integer priority = scanner.nextInt();
-
+		Integer priority = Integer.parseInt(br.readLine());
 		ToDoList toDoList = new ToDoList(ServiceMenu2.투두리스트_작성, userId, title, content, closedDate, priority);
 
 		return toDoList;
 	}
 
 	private static Optional<ToDoList> handleToDoListDelete(Scanner scanner) throws IOException {
-		// 투두리스트 작성 처리
 		System.out.println("----------투두리스트 삭제----------");
 		System.out.print("삭제하실 투두리스트의 제목을 입력해주세요: ");
 		String title = scanner.next();
