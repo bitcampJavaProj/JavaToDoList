@@ -22,7 +22,7 @@ public class UserDAO {
 	    // 동일한 유저 있는지 확인
 	    if (isUsernameExists(user.getUsername())) {
 	        result = 2; // 동일 유저 있을시
-	        System.out.println("이미 사용중인 ID입니다. 다른 아이디를 작성해 주세요.");
+	        System.out.println("\n\n<<  이미 사용중인 ID입니다. 다른 아이디를 작성해 주세요.  >>\n\n");
 	        return result;
 	    }
 
@@ -38,7 +38,7 @@ public class UserDAO {
 	        e.printStackTrace();
 	    }
 
-	    System.out.printf("\nUserDAO: %s\n\n", result == 0 ? "가입에 실패했습니다. 다시 시도해 주세요." : "가입되었습니다. 로그인을 진행해주세요.");
+	    System.out.printf("\n\n<<  %s  >>\n\n", result == 0 ? "가입에 실패했습니다. 다시 시도해 주세요." : "가입되었습니다. 로그인을 진행해주세요.");
 	    return result;
 	}
 	
@@ -66,7 +66,7 @@ public class UserDAO {
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
-		System.out.printf("\nUserDAO: %s\n\n", userId == 0 ? "로그인에 실패했습니다. 다시 시도해 주세요." : "로그인에 성공했습니다.");
+		System.out.printf("\n\n<<  %s  >>\n\n", userId == 0 ? "로그인에 실패했습니다. 다시 시도해 주세요." : "로그인에 성공했습니다.");
 	    return userId;
 	}
 	

@@ -119,13 +119,14 @@ class WorkerThread extends Thread {
 			ToDoListDAO.updateToDoList(DBConnection.getConnection(), toDoListObj);
 			break;
 		case ServiceMenu2.투두리스트_전체_조회: 
-			ToDoListDAO.getTodoList("all", toDoListObj);            
+			ToDoListDAO.getTodoList("all", toDoListObj);   
+			
             break;
 		case ServiceMenu2.투두리스트_완료: 
-//			ToDoListDAO.getTodoList("completed", toDoListObj);
+			ToDoListDAO.getTodoList("completed", toDoListObj);
 			break;
 		case ServiceMenu2.투두리스트_미완료: 
-//			ToDoListDAO.getTodoList("incomplete", toDoListObj);
+			ToDoListDAO.getTodoList("incomplete", toDoListObj);
 			break;
 		case ServiceMenu2.다이어리_작성: 
 			DiaryDAO.writeDiary(DBConnection.getConnection(), diaryObj);

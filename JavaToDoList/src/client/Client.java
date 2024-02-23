@@ -6,10 +6,11 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.Optional;
 import java.util.Scanner;
-import java.util.StringTokenizer;
 
+import DAO.ToDoListDAO;
 import DAO.UserDAO;
 import DTO.Diary;
 import DTO.ToDoList;
@@ -203,18 +204,33 @@ public class Client {
 	private static ToDoList handleToDoListAll() throws IOException {
 		System.out.println("----------투두리스트 전체 조회----------");
 		ToDoList toDoList = new ToDoList(ServiceMenu2.투두리스트_전체_조회, userId);
+		try {
+			ToDoListDAO.getTodoList("completed", toDoList);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return toDoList;
 	}
 	
 	private static ToDoList handleToDoListCom() throws IOException {
-		System.out.println("----------투두리스트 전체 조회----------");
+		System.out.println("----------완료된 투두리스트 조회----------");
 		ToDoList toDoList = new ToDoList(ServiceMenu2.투두리스트_완료, userId);
+		try {
+			ToDoListDAO.getTodoList("completed", toDoList);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return toDoList;
 	}
 	
 	private static ToDoList handleToDoListIncom() throws IOException {
-		System.out.println("----------투두리스트 전체 조회----------");
+		System.out.println("----------미완료된 투두리스트 조회----------");
 		ToDoList toDoList = new ToDoList(ServiceMenu2.투두리스트_미완료, userId);
+		try {
+			ToDoListDAO.getTodoList("completed", toDoList);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return toDoList;
 	}
 

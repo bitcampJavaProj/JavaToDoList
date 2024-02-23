@@ -140,10 +140,10 @@ public class ToDoListDAO {
 				sql = "SELECT * FROM todolist WHERE userId = ? and isDeleted = 0 ORDER BY closedDate ASC, priority DESC";
 			} else if ("completed".equals(filter)) {
 				// 완료한 리스트 불러오기(종료 날짜 순 & 중요도 순)
-				sql = "SELECT * FROM todolist WHERE isDeleted = 0 and userId = ? and isComplete = 1 ORDER BY closedDate ASC, priority DESC";
+				sql = "SELECT * FROM todolist WHERE userId = ? and isDeleted = 0 and isComplete = 1 ORDER BY closedDate ASC, priority DESC";
 			} else if ("incomplete".equals(filter)) {
 				// 종료한 리스트 불러오기(종료 날짜 순 & 중요도 순)
-				sql = "SELECT * FROM todolist WHERE isDeleted = 0 and userId = ? and isComplete = 0 ORDER BY closedDate ASC, priority DESC";
+				sql = "SELECT * FROM todolist WHERE userId = ? and isDeleted = 0 and isComplete = 0 ORDER BY closedDate ASC, priority DESC";
 			} else {
 				throw new IllegalArgumentException(
 						"Invalid filter value. Supported values: 'all', 'completed', 'incomplete'");
@@ -154,29 +154,40 @@ public class ToDoListDAO {
 			ps.setInt(1, toDoList.getUserId());
 
 			ResultSet rs = ps.executeQuery();
+			if (!rs.next()) {
+				if ("all".equals(filter)) {
+					System.out.println("\n\n-----등록된 일정이 없습니다.-----\n\n");
+				} else if ("completed".equals(filter)) {
+					System.out.println("\n\n-----완료된 일정이 없습니다.-----\n\n");
+				} else if ("incomplete".equals(filter)) {
+					System.out.println("\n\n-----미완료된 일정이 없습니다.-----\n\n");
+				}
+			} else {
+				while (rs.next()) {
+					Integer toDoListId = rs.getInt("toDoListId");
+					Integer userId = rs.getInt("userId");
+					String title = rs.getString("title");
+					String content = rs.getString("content");
+					LocalDate createDate = rs.getDate("createDate").toLocalDate();
+					String closedDate = rs.getString("closedDate");
+					Integer priority = rs.getInt("priority");
+					Boolean isComplete = rs.getBoolean("isComplete");
+					Boolean isDeleted = rs.getBoolean("isDeleted");
 
-			while (rs.next()) {
-				Integer toDoListId = rs.getInt("toDoListId");
-				Integer userId = rs.getInt("userId");
-				String title = rs.getString("title");
-				String content = rs.getString("content");
-				LocalDate createDate = rs.getDate("createDate").toLocalDate();
-				String closedDate = rs.getString("closedDate");
-				Integer priority = rs.getInt("priority");
-				Boolean isComplete = rs.getBoolean("isComplete");
-				Boolean isDeleted = rs.getBoolean("isDeleted");
+					ToDoList list = new ToDoList(toDoListId, userId, title, content, createDate, closedDate, priority,
+							isComplete, isDeleted);
 
-				ToDoList list = new ToDoList(toDoListId, userId, title, content, createDate, closedDate, priority,
-						isComplete, isDeleted);
+					System.out.printf("%s", list);
+					System.out.printf("---------------------------------\n");
 
-				todoList.add(list);
+					todoList.add(list);
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			ps.close();
 		}
-		System.out.println(todoList);
 
 		return todoList;
 	}

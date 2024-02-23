@@ -45,7 +45,6 @@ public class ToDoList extends Cmd implements Serializable {
 	      this.closedDate = closedDate;
 	      this.priority = priority; 
 	   }
-
 	
 	public ToDoList(Integer cmd, Integer userId) {
 	      this.cmd = cmd;
@@ -106,8 +105,8 @@ public class ToDoList extends Cmd implements Serializable {
 	
 	@Override
 	public String toString() {
-		String str = String.format("유저 번호: %s\n할 일: %s\n메모: %s\n생성 날짜: %s\n마감 날짜: %s\n우선 순위: %d\n완료 여부: %b\n삭제 여부: %b\n", 
-									userId, title, content, createDate, closedDate, priority, isComplete, isDeleted);
+		String str = String.format("할 일: %s\n메모: %s\n생성 날짜: %s\n마감 날짜: %s\n우선 순위: %d\n완료 여부: %b\n", 
+									title, content, createDate, closedDate, priority, isComplete);
 		return str;
 	}
 }
