@@ -138,10 +138,9 @@ class WorkerThread extends Thread {
 			
 			break;
 		case ServiceMenu2.다이어리_전체_조회: 
-			
+			DiaryDAO.getDiary("all", diaryObj);
 			break;
 		case ServiceMenu2.다이어리_특정날짜: 
-			
 			break;
 		}
 	}

@@ -7,6 +7,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -101,7 +103,7 @@ public class Client {
 					case ServiceMenu2.다이어리_수정:
 						break;
 					case ServiceMenu2.다이어리_전체_조회:
-//						handleDiaryRetrieval(scanner);
+						oos.writeObject(handleDiaryAllRetrieval());
 						break;
 					case ServiceMenu2.다이어리_특정날짜:
 						break;
@@ -249,6 +251,22 @@ public class Client {
 		System.out.println(diary.toString());
 
 		return diary;
+	}
+	
+	private static Diary handleDiaryAllRetrieval() throws IOException {
+		// 다이어리 전체 조회 처리
+		System.out.println("----------전체 일기 조회----------");
+		return new Diary(ServiceMenu2.다이어리_전체_조회, userId);
+	}
+
+	private static Diary handleDiarySpecRetrieval(Scanner scanner, String str) throws IOException {
+		// 다이어리 특정 날짜 조회 처리
+		System.out.println("----------특정 날짜 일기 조회----------");
+		System.out.println("조회를 원하는 날짜를 입력하세요. [2000-01-01] 포맷으로 입력하세요.");
+		LocalDate createDate = LocalDate.parse(scanner.next(), DateTimeFormatter.ISO_DATE);
+
+		return new Diary(ServiceMenu2.다이어리_특정날짜, userId, createDate);
+
 	}
 //
 //	private static void handleDiaryRetrieval(Scanner scanner)
