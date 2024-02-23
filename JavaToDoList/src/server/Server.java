@@ -56,6 +56,7 @@ class WorkerThread extends Thread {
 	private Cmd cmdObj;
 	private ToDoList toDoListObj;
 	private Diary diaryObj;
+	private static Integer userId;
 
 	public WorkerThread(Socket socket, Hashtable<String, Socket> ht) {
 		this.socket = socket;
@@ -109,6 +110,7 @@ class WorkerThread extends Thread {
 			try {
 				User userObj = (User)cmdObj;
 				UserDAO.loginUser(userObj);
+				userId = UserDAO.loginUser(userObj);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -130,13 +132,13 @@ class WorkerThread extends Thread {
 				ToDoListDAO.updateToDoList(DBConnection.getConnection(), toDoListObj);
 				break;
 			case ServiceMenu2.투두리스트_전체_조회: 
-				
+				ToDoListDAO.getTodoList("all", toDoListObj);
 				break;
 			case ServiceMenu2.투두리스트_완료: 
-				
+				ToDoListDAO.getTodoList("completed", toDoListObj);
 				break;
 			case ServiceMenu2.투두리스트_미완료: 
-				
+				ToDoListDAO.getTodoList("incomplete", toDoListObj);
 				break;
 			case ServiceMenu2.다이어리_작성: 
 				

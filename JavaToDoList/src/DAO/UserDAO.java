@@ -38,7 +38,7 @@ public class UserDAO {
 	        e.printStackTrace();
 	    }
 
-	    System.out.println("UserDAO: " + result);
+	    System.out.printf("\nUserDAO: %s\n\n", result == 0 ? "가입에 실패했습니다. 다시 시도해 주세요." : "가입되었습니다. 로그인을 진행해주세요.");
 	    return result;
 	}
 	
@@ -66,7 +66,7 @@ public class UserDAO {
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
-		System.out.println("UserDAO: " + userId);
+		System.out.printf("\nUserDAO: %s\n\n", userId == 0 ? "로그인에 실패했습니다. 다시 시도해 주세요." : "로그인에 성공했습니다.");
 	    return userId;
 	}
 	
