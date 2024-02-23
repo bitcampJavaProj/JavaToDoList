@@ -68,12 +68,12 @@ public class ToDoListDAO {
 		int result = 0;
 		PreparedStatement pstmt = null;
 		try {
-			String sql = "update todolist set isDeleted = 1 where userId = ? and toDoListId = ?";
+			String sql = "update todolist set isDeleted = 1 where userId = ? and title = ?";
 
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setInt(1, toDoList.getUserId());
-			pstmt.setInt(2, toDoList.getToDoListId());
+			pstmt.setString(2, toDoList.getTitle());
 
 			result = pstmt.executeUpdate();
 		} catch (Exception e) {

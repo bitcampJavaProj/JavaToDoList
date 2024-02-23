@@ -95,7 +95,6 @@ class WorkerThread extends Thread {
 	private void processMenuPacket(Object packetObj) throws Exception {
 		cmdObj = (Cmd)packetObj;
 		
-		// TODO Auto-generated method stub
 		if(cmdObj instanceof ToDoList) {
 			toDoListObj = (ToDoList)cmdObj;
 		} else if(cmdObj instanceof Diary) {
