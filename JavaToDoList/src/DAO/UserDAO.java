@@ -38,7 +38,7 @@ public class UserDAO {
 	        e.printStackTrace();
 	    }
 
-	    System.out.println("ToDoListDAO: " + result);
+	    System.out.println("UserDAO: " + result);
 	    return result;
 	}
 	
@@ -66,7 +66,7 @@ public class UserDAO {
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
-		System.out.println("ToDoListDAO: " + userId);
+		System.out.println("UserDAO: " + userId);
 	    return userId;
 	}
 	

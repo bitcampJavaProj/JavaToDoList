@@ -108,7 +108,7 @@ class WorkerThread extends Thread {
 		} else if(cmdObj.getCmd().equals("로그인")) {
 			try {
 				User userObj = (User)cmdObj;
-				UserDAO.loginUser(DBConnection.getConnection(), userObj);
+				UserDAO.loginUser(userObj);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

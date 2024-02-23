@@ -40,7 +40,7 @@ public class Client {
 						break;
 					case "로그인":
 						User user = handleLogin(scanner);
-						userId = UserDAO.loginUser(DBConnection.getConnection(), user);
+						userId = UserDAO.loginUser(user);
 						oos.writeObject(user);
 						isLoggedIn = true;
 						break;

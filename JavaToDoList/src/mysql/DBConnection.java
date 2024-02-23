@@ -2,6 +2,7 @@ package mysql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 /**
  * DBConnection
@@ -49,6 +50,14 @@ public class DBConnection {
 
 	// Connection getter
 	public static Connection getConnection() {
-		return connection;
+		if (connection == null) {
+            try {
+                // 데이터베이스 연결 정보를 사용하여 Connection 생성
+                connection = DriverManager.getConnection(jdbcUrl, userName, password);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return connection;
 	}
 }
