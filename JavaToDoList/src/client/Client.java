@@ -256,7 +256,6 @@ public class Client {
 	private static Diary handleDiaryAllRetrieval() throws IOException {
 		// 다이어리 전체 조회 처리
 		System.out.println("----------전체 일기 조회----------");
-
 		return new Diary(ServiceMenu2.다이어리_전체_조회, userId);
 	}
 
