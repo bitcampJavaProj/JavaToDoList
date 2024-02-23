@@ -11,6 +11,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Hashtable;
 
+import DAO.DiaryDAO;
 import DAO.ToDoListDAO;
 import DAO.UserDAO;
 import DTO.Cmd;
@@ -82,16 +83,63 @@ class WorkerThread extends Thread {
 				 * 수신된 객체가 null일 경우 반복문 종료 + 스레드 실행 종료
 				 */
 				Object packetObj = ois.readObject();
-				if(packetObj == null)
-					break;
-				processPacket(packetObj);
+				
+				if(packetObj instanceof User)processUserPacket(packetObj);
+				else if(packetObj instanceof ToDoList || packetObj instanceof Diary) processMenuPacket(packetObj);
 			}
 		} catch (Exception e) {
 			System.out.printf("<서버-%s>%s\n", getName(), e.getMessage());
 		}
 	}
 	
-	private void processPacket(Object packetObj) throws Exception {
+	private void processMenuPacket(Object packetObj) throws Exception {
+		cmdObj = (Cmd)packetObj;
+		
+		// TODO Auto-generated method stub
+		if(cmdObj instanceof ToDoList) {
+			toDoListObj = (ToDoList)cmdObj;
+		} else if(cmdObj instanceof Diary) {
+			diaryObj = (Diary)cmdObj;
+		}
+
+		switch ((int)cmdObj.getCmd()) {
+		case ServiceMenu2.투두리스트_작성: 
+			ToDoListDAO.insertToDoList(DBConnection.getConnection(), toDoListObj);
+			break;
+		case ServiceMenu2.투두리스트_삭제: 
+			ToDoListDAO.deleteToDoList(DBConnection.getConnection(), toDoListObj);
+			break;
+		case ServiceMenu2.투두리스트_수정: 
+			ToDoListDAO.updateToDoList(DBConnection.getConnection(), toDoListObj);
+			break;
+		case ServiceMenu2.투두리스트_전체_조회: 
+			ToDoListDAO.getTodoList("all", toDoListObj);
+			break;
+		case ServiceMenu2.투두리스트_완료: 
+			ToDoListDAO.getTodoList("completed", toDoListObj);
+			break;
+		case ServiceMenu2.투두리스트_미완료: 
+			ToDoListDAO.getTodoList("incomplete", toDoListObj);
+			break;
+		case ServiceMenu2.다이어리_작성: 
+			DiaryDAO.writeDiary(DBConnection.getConnection(), diaryObj);
+			break;
+		case ServiceMenu2.다이어리_삭제: 
+			
+			break;
+		case ServiceMenu2.다이어리_수정: 
+			
+			break;
+		case ServiceMenu2.다이어리_전체_조회: 
+			
+			break;
+		case ServiceMenu2.다이어리_특정날짜: 
+			
+			break;
+		}
+	}
+
+	private void processUserPacket(Object packetObj) throws Exception {
 		// 클라이언트에 응답을 하기 위한 오브젝트
 		Object ackObj = new Object();
 		
@@ -109,53 +157,13 @@ class WorkerThread extends Thread {
 		} else if(cmdObj.getCmd().equals("로그인")) {
 			try {
 				User userObj = (User)cmdObj;
+				System.out.println(userObj.toString());
 				UserDAO.loginUser(userObj);
 				userId = UserDAO.loginUser(userObj);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-			if(cmdObj instanceof ToDoList) {
-				toDoListObj = (ToDoList)cmdObj;
-			} else if(cmdObj instanceof Diary) {
-				diaryObj = (Diary)cmdObj;
-			}
 
-			switch ((int)cmdObj.getCmd()) {
-			case ServiceMenu2.투두리스트_작성: 
-				ToDoListDAO.insertToDoList(DBConnection.getConnection(), toDoListObj);
-				break;
-			case ServiceMenu2.투두리스트_삭제: 
-				ToDoListDAO.deleteToDoList(DBConnection.getConnection(), toDoListObj);
-				break;
-			case ServiceMenu2.투두리스트_수정: 
-				ToDoListDAO.updateToDoList(DBConnection.getConnection(), toDoListObj);
-				break;
-			case ServiceMenu2.투두리스트_전체_조회: 
-				ToDoListDAO.getTodoList("all", toDoListObj);
-				break;
-			case ServiceMenu2.투두리스트_완료: 
-				ToDoListDAO.getTodoList("completed", toDoListObj);
-				break;
-			case ServiceMenu2.투두리스트_미완료: 
-				ToDoListDAO.getTodoList("incomplete", toDoListObj);
-				break;
-			case ServiceMenu2.다이어리_작성: 
-				
-				break;
-			case ServiceMenu2.다이어리_삭제: 
-				
-				break;
-			case ServiceMenu2.다이어리_수정: 
-				
-				break;
-			case ServiceMenu2.다이어리_전체_조회: 
-				
-				break;
-			case ServiceMenu2.다이어리_특정날짜: 
-				
-				break;
-			}
 		}  else if(cmdObj.getCmd().equals("로그아웃")) {
 //			String id = packetObj.getString("id");
 			
