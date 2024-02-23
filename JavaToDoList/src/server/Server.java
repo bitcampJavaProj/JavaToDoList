@@ -10,6 +10,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Hashtable;
+import java.util.List;
 
 import DAO.DiaryDAO;
 import DAO.ToDoListDAO;
@@ -84,15 +85,21 @@ class WorkerThread extends Thread {
 				 */
 				Object packetObj = ois.readObject();
 				
-				if(packetObj instanceof User)processUserPacket(packetObj);
-				else if(packetObj instanceof ToDoList || packetObj instanceof Diary) processMenuPacket(packetObj);
+//				if(packetObj instanceof User)processUserPacket(packetObj);
+//				else if(packetObj instanceof ToDoList || packetObj instanceof Diary) processMenuPacket(packetObj);
+
+                if (packetObj instanceof User) {
+                    processUserPacket(packetObj);
+                } else if (packetObj instanceof ToDoList || packetObj instanceof Diary) {
+                    processMenuPacket(packetObj, oos);
+                }
 			}
 		} catch (Exception e) {
 			System.out.printf("<서버-%s>%s\n", getName(), e.getMessage());
 		}
 	}
 	
-	private void processMenuPacket(Object packetObj) throws Exception {
+	private void processMenuPacket(Object packetObj, ObjectOutputStream oos) throws Exception {
 		cmdObj = (Cmd)packetObj;
 		
 		if(cmdObj instanceof ToDoList) {
@@ -112,13 +119,13 @@ class WorkerThread extends Thread {
 			ToDoListDAO.updateToDoList(DBConnection.getConnection(), toDoListObj);
 			break;
 		case ServiceMenu2.투두리스트_전체_조회: 
-			ToDoListDAO.getTodoList("all", toDoListObj);
-			break;
+			ToDoListDAO.getTodoList("all", toDoListObj);            
+            break;
 		case ServiceMenu2.투두리스트_완료: 
-			ToDoListDAO.getTodoList("completed", toDoListObj);
+//			ToDoListDAO.getTodoList("completed", toDoListObj);
 			break;
 		case ServiceMenu2.투두리스트_미완료: 
-			ToDoListDAO.getTodoList("incomplete", toDoListObj);
+//			ToDoListDAO.getTodoList("incomplete", toDoListObj);
 			break;
 		case ServiceMenu2.다이어리_작성: 
 			DiaryDAO.writeDiary(DBConnection.getConnection(), diaryObj);
