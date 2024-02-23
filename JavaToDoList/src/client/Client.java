@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Optional;
 import java.util.Scanner;
 
 import DAO.UserDAO;
@@ -11,7 +12,6 @@ import DTO.Cmd;
 import DTO.Diary;
 import DTO.ToDoList;
 import DTO.User;
-import mysql.DBConnection;
 
 public class Client {
 	private static final String SERVER_IP = "localhost";
@@ -68,8 +68,18 @@ public class Client {
 						oos.writeObject(handleToDoListCreation(scanner));
 						break;
 					case ServiceMenu2.투두리스트_삭제:
-						
-						break;
+						Optional<ToDoList> optionalToDoList = handleToDoListDelete(scanner);
+                        optionalToDoList.ifPresentOrElse(
+                                toDoList -> {
+                                    try {
+                                        oos.writeObject(toDoList);
+                                        System.out.println("투두리스트 삭제가 완료되었습니다.");
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                },
+                                () -> System.out.println("투두리스트 삭제가 취소되었습니다.")
+                        );
 					case ServiceMenu2.투두리스트_수정:
 						
 						break;
@@ -176,6 +186,26 @@ public class Client {
 		ToDoList toDoList = new ToDoList(ServiceMenu2.투두리스트_작성, userId, title, content, closedDate, priority);
 		
 		return toDoList;
+	}
+	
+	private static Optional<ToDoList> handleToDoListDelete(Scanner scanner)
+			throws IOException {
+		// 투두리스트 작성 처리
+		System.out.println("----------투두리스트 삭제----------");
+		System.out.print("삭제하실 투두리스트의 제목을 입력해주세요: ");
+		String title = scanner.next();
+		System.out.print("정말 삭제하시겠습니까?(Y/N) ");
+		String ack = scanner.next();
+		switch(ack) {
+        case "Y", "y":
+            ToDoList toDoList = new ToDoList(ServiceMenu2.투두리스트_삭제, userId, title, null, null, null);
+            return Optional.of(toDoList);
+        case "N", "n":
+            return Optional.empty();
+        default:
+            System.out.println("잘못된 입력입니다.");
+            return Optional.empty();
+    }
 	}
 
 	private static void handleToDoListRetrieval(Scanner scanner, String str) throws IOException {
