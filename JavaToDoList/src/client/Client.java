@@ -42,7 +42,11 @@ public class Client {
 						User user = handleLogin(scanner);
 						userId = UserDAO.loginUser(user);
 						oos.writeObject(user);
-						isLoggedIn = true;
+						if (userId == 0) {
+							isLoggedIn = false;
+						} else {
+							isLoggedIn = true;
+						}
 						break;
 					case "로그아웃":
 						System.out.println("프로그램 종료");
