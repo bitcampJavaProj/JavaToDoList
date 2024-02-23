@@ -137,13 +137,13 @@ public class ToDoListDAO {
 		try {
 			if ("all".equals(filter)) {
 				// 전체 내용 가져오기(종료 날짜 순 & 중요도 순)
-				sql = "SELECT * FROM todolist WHERE userId = ? and isDeleted = 1 ORDER BY closedDate ASC, priority DESC";
+				sql = "SELECT * FROM todolist WHERE userId = ? and isDeleted = 0 ORDER BY closedDate ASC, priority DESC";
 			} else if ("completed".equals(filter)) {
 				// 완료한 리스트 불러오기(종료 날짜 순 & 중요도 순)
-				sql = "SELECT * FROM todolist WHERE userId = ? and isDeleted = 1 and isComplete = 1 ORDER BY closedDate ASC, priority DESC";
+				sql = "SELECT * FROM todolist WHERE userId = ? and isDeleted = 0 and isComplete = 1 ORDER BY closedDate ASC, priority DESC";
 			} else if ("incomplete".equals(filter)) {
 				// 종료한 리스트 불러오기(종료 날짜 순 & 중요도 순)
-				sql = "SELECT * FROM todolist WHERE userId = ? and isDeleted = 1 and isComplete = 0 ORDER BY closedDate ASC, priority DESC";
+				sql = "SELECT * FROM todolist WHERE userId = ? and isDeleted = 0 and isComplete = 0 ORDER BY closedDate ASC, priority DESC";
 			} else {
 				throw new IllegalArgumentException("Invalid filter value. Supported values: 'all', 'completed', 'incomplete'");
 			}
@@ -153,7 +153,7 @@ public class ToDoListDAO {
 			ps.setInt(1, toDoList.getUserId());
 
 			ResultSet rs = ps.executeQuery();
-			
+
 			while (rs.next()) {
 				Integer toDoListId = rs.getInt("toDoListId");
 				Integer userId = rs.getInt("userId");
@@ -181,6 +181,3 @@ public class ToDoListDAO {
 		return todoList;
 	}
 }
-
-
-//System.out.println("/n/n-----등록된 일정이 없습니다.-----/n/n");
