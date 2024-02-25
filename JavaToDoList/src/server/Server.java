@@ -125,7 +125,7 @@ class WorkerThread extends Thread {
 			DiaryDAO.writeDiary(DBConnection.getConnection(), diaryObj);
 			break;
 		case ServiceMenu2.다이어리_삭제: 
-			
+			DiaryDAO.deleteDiary(DBConnection.getConnection(), diaryObj);
 			break;
 		case ServiceMenu2.다이어리_수정: 
 			

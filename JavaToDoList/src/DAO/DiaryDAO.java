@@ -54,12 +54,13 @@ public class DiaryDAO {
       int result = 0;
 
       try {
-         sql = "UPDATE DIARY SET isDeleted = 1 WHERE userId = ? AND diaryId = ?";
+         sql = "UPDATE DIARY SET isDeleted = 1 WHERE userId = ? AND diaryId = ? AND title = ?";
 
          pstmt = conn.prepareStatement(sql);
 
          pstmt.setInt(1, diary.getUserId());
          pstmt.setInt(2, diary.getDiaryId());
+         pstmt.setString(3, diary.getTitle());
 
          result = pstmt.executeUpdate();
       } catch (Exception e) {
@@ -67,7 +68,8 @@ public class DiaryDAO {
       } finally {
          pstmt.close();
       }
-
+      
+      System.out.println("diaryDAO : " + result);
       return result;
    }
 
