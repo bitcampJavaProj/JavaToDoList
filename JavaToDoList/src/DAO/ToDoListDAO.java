@@ -80,7 +80,7 @@ public class ToDoListDAO {
 	/**
 	 * @author 서혜리<br>
 	 *         updateToDoList : todolist를 수정하는 기능<br>
-	 *         
+	 * 
 	 * @return result : db에 저장이 성공적으로 되면 1을 반환
 	 */
 	public static int updateToDoList(Connection conn, ToDoList toDoList) throws Exception {
@@ -136,7 +136,8 @@ public class ToDoListDAO {
 				// 종료한 리스트 불러오기(종료 날짜 순 & 중요도 순)
 				sql = "SELECT * FROM todolist WHERE userId = ? and isDeleted = 0 and isComplete = 0 ORDER BY closedDate ASC, priority DESC";
 			} else {
-				throw new IllegalArgumentException("Invalid filter value. Supported values: 'all', 'completed', 'incomplete'");
+				throw new IllegalArgumentException(
+						"Invalid filter value. Supported values: 'all', 'completed', 'incomplete'");
 			}
 
 			ps = DBConnection.getConnection().prepareStatement(sql);
@@ -156,11 +157,12 @@ public class ToDoListDAO {
 				Boolean isComplete = rs.getBoolean("isComplete");
 				Boolean isDeleted = rs.getBoolean("isDeleted");
 
-				ToDoList list = new ToDoList(toDoListId, userId, title, content, createDate, closedDate, priority, isComplete, isDeleted);
+				ToDoList list = new ToDoList(toDoListId, userId, title, content, createDate, closedDate, priority,
+						isComplete, isDeleted);
 
 				System.out.printf("%s", list);
 				System.out.printf("---------------------------------\n");
-				
+
 				todoList.add(list);
 			}
 		} catch (SQLException e) {
