@@ -17,16 +17,11 @@ public class ToDoListDAO {
 	public ToDoListDAO() {
 	}
 
-	/* Method */
-
 	/**
-	 * @author 서혜리
+	 * @author 서혜리<br>
+	 *         insertToDoList : todolist를 DB에 저장하는 기능<br>
 	 * 
-	 *         insertToDoList : todolist를 DB에 저장하는 기능
-	 * 
-	 *         result : db에 저장이 성공적으로 되면 1을 반환
-	 * 
-	 * @return result
+	 * @return result : db에 저장이 성공적으로 되면 1을 반환
 	 */
 	public static int insertToDoList(Connection conn, ToDoList toDoList) throws Exception {
 		int result = 0;
@@ -55,13 +50,11 @@ public class ToDoListDAO {
 	}
 
 	/**
-	 * @author 서혜리
+	 * @author 서혜리<br>
+	 *         deleteToDoList : todolist에 있는 isDeleted 컬럼의 값을 1로 반환하는 기능<br>
+	 *         따라서 조회할 때 isDeleted 값이 1이면 조회되지 않도록 함<br>
 	 * 
-	 *         deleteToDoList : todolist를 삭제하는 기능
-	 * 
-	 *         result : db에서 삭제가 성공적으로 되면 1을 반환
-	 * 
-	 * @return result
+	 * @return result : db에서 삭제가 성공적으로 되면 1을 반환
 	 */
 	public static int deleteToDoList(Connection conn, ToDoList toDoList) throws Exception {
 		int result = 0;
@@ -85,28 +78,26 @@ public class ToDoListDAO {
 	}
 
 	/**
-	 * @author 서혜리
-	 * 
-	 *         updateToDoList : todolist를 수정하는 기능
-	 * 
-	 *         result : db에 저장이 성공적으로 되면 1을 반환
-	 * 
-	 * @return result
+	 * @author 서혜리<br>
+	 *         updateToDoList : todolist를 수정하는 기능<br>
+	 *         
+	 * @return result : db에 저장이 성공적으로 되면 1을 반환
 	 */
 	public static int updateToDoList(Connection conn, ToDoList toDoList) throws Exception {
 		int result = 0;
 		PreparedStatement pstmt = null;
 		try {
-			String sql = "update todolist set title = ?, content=?, closedDate = ?, priority = ?, isComplete = ? where userId = ?";
+			String sql = "update todolist set title = ?, content=?, closedDate = ?, priority = ?, isComplete = ? where userId = ? and title = ?";
 
 			pstmt = conn.prepareStatement(sql);
 
-			pstmt.setString(1, toDoList.getTitle());
+			pstmt.setString(1, toDoList.getNewTitle());
 			pstmt.setString(2, toDoList.getContent());
 			pstmt.setString(3, toDoList.getClosedDate());
 			pstmt.setInt(4, toDoList.getPriority());
 			pstmt.setBoolean(5, toDoList.getIsComplete());
 			pstmt.setInt(6, toDoList.getUserId());
+			pstmt.setString(7, toDoList.getTitle());
 
 			result = pstmt.executeUpdate();
 		} catch (Exception e) {
