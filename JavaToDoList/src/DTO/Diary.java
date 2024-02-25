@@ -26,6 +26,12 @@ public Diary(Object cmd, Integer userId) {
 	this.userId = userId;
 }
 
+public Diary(Object cmd, Integer userId, String title) {
+	this.cmd = cmd;
+	this.userId = userId;
+	this.title = title;
+}
+
 public Diary(Object cmd, String title, String content, Integer userId) {
 	   this.cmd = cmd;
 	   this.title = title;

@@ -93,7 +93,7 @@ public class Client {
 						oos.writeObject(handleDiaryEntry(scanner));
 						break;
 					case ServiceMenu2.다이어리_삭제:
-//						handleDiaryDeletion(scanner);
+						handleDiaryDelete(scanner);
 						break;
 					case ServiceMenu2.다이어리_수정:
 						break;
@@ -357,10 +357,24 @@ public class Client {
 //		// 서버로부터 결과 수신 및 출력
 //	}
 //
-//	private static void handleDiaryDeletion(Scanner scanner)
-//			throws IOException {
-//		// 일기 삭제 처리
-//		writer.println("----------일기 삭제----------");
-//		// 서버로부터 결과 수신 및 출력
-//	}
+	
+	
+	private static Optional<Diary> handleDiaryDelete(Scanner scanner)
+			throws IOException {
+		System.out.println("----------일기 삭제----------");
+		System.out.print("삭제하실 일기의 제목을 입력해주세요: ");
+		String title = scanner.next();
+		System.out.print("정말 삭제하시겠습니까?(Y/N) ");
+		String ack = scanner.next();
+		switch (ack) {
+		case "Y", "y":
+			Diary diary = new Diary(ServiceMenu2.투두리스트_삭제, userId, title);
+			return Optional.of(diary);
+		case "N", "n":
+			return Optional.empty();
+		default:
+			System.out.println("잘못된 입력입니다.");
+			return Optional.empty();
+		}
+	}
 }
