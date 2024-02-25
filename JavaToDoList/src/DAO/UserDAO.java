@@ -9,6 +9,7 @@ import mysql.DBConnection;
 public class UserDAO {
 	
 	/**
+	 * @author 유민진,orbit
 	 * insertUser<br>
 	 * 유저 생성 기능
 	 * 
@@ -43,6 +44,7 @@ public class UserDAO {
 	}
 	
 	/**
+	 * @author 유민진,orbit
 	 * loginUser<br>
 	 * 유저 로그인 기능
 	 *
@@ -71,6 +73,7 @@ public class UserDAO {
 	}
 	
 	/**
+	 * @author orbit
 	 * isUsernameExists<br>
 	 * 데이터 베이스에 이미 동일한 ID의 유저가 있는지 확인하는 기능
 	 *

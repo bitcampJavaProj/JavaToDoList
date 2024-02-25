@@ -81,13 +81,13 @@ public class Client {
 					case ServiceMenu2.투두리스트_수정:
 						oos.writeObject(handleToDoListUpdate(scanner));
 					case ServiceMenu2.투두리스트_전체_조회:
-						oos.writeObject(handleToDoListAll());
+						oos.writeObject(handleToDoList("all"));
 						break;
 					case ServiceMenu2.투두리스트_완료:
-						oos.writeObject(handleToDoListCom());
+						oos.writeObject(handleToDoList("completed"));
 						break;
 					case ServiceMenu2.투두리스트_미완료:
-						oos.writeObject(handleToDoListIncom());
+						oos.writeObject(handleToDoList("incomplete"));
 						break;
 					case ServiceMenu2.다이어리_작성:
 						oos.writeObject(handleDiaryEntry(scanner));
@@ -254,49 +254,19 @@ public class Client {
 
 	/**
 	 * @author 박지우/서혜리<br>
-	 *         handleToDoListAll : 투두리스트 전체 조회<br>
+	 *         handleToDoList : 투두리스트 조회<br>
 	 * 
+	 * @param filter : 해당하는 filter 값 조회 all/completed/incomplete
 	 * @return toDoList : 투두리스트 작성에 성공하면 toDoList 객체를 반환함
 	 */
-	private static ToDoList handleToDoListAll() throws IOException {
-		System.out.println("----------투두리스트 전체 조회----------");
-		ToDoList toDoList = new ToDoList(ServiceMenu2.투두리스트_전체_조회, userId);
-		try {
-			ToDoListDAO.getTodoList("all", toDoList);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return toDoList;
-	}
+	private static ToDoList handleToDoList(String filter) throws IOException {
+		System.out.printf("----------투두리스트 %s 조회----------",
+				filter == "all" ? "전체" : filter == "completed" ? "완료 목록" : "미완료 목록");
+		ToDoList toDoList = new ToDoList(filter == "all" ? ServiceMenu2.투두리스트_전체_조회
+				: filter == "completed" ? ServiceMenu2.투두리스트_완료 : ServiceMenu2.투두리스트_미완료, userId);
 
-	/**
-	 * @author 박지우<br>
-	 *         handleToDoListCom : 투두리스트 조회<br>
-	 * 
-	 * @return toDoList : 
-	 */
-	private static ToDoList handleToDoListCom() throws IOException {
-		System.out.println("----------완료된 투두리스트 조회----------");
-		ToDoList toDoList = new ToDoList(ServiceMenu2.투두리스트_완료, userId);
 		try {
-			ToDoListDAO.getTodoList("completed", toDoList);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return toDoList;
-	}
-
-	/**
-	 * @author 박지우<br>
-	 *         handleToDoListCom : 투두리스트 조회<br>
-	 * 
-	 * @return toDoList : 
-	 */
-	private static ToDoList handleToDoListIncom() throws IOException {
-		System.out.println("----------미완료된 투두리스트 조회----------");
-		ToDoList toDoList = new ToDoList(ServiceMenu2.투두리스트_미완료, userId);
-		try {
-			ToDoListDAO.getTodoList("incomplete", toDoList);
+			ToDoListDAO.getTodoList(filter, toDoList);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
