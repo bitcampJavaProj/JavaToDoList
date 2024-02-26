@@ -337,22 +337,21 @@ public class Client {
 		// 일기 수정 처리
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		System.out.println("------------일기 수정------------");
-		System.out.println("수정하실 일기의 제목을 입력해주세요: ");
+		System.out.print("수정하실 일기의 제목을 입력해주세요: ");
 		String title = br.readLine();
 		Diary diary = new Diary(ServiceMenu2.다이어리_수정, title, userId);
-		System.out.println("수정하시겠습니까?(Y/N) ");
+		System.out.print("수정하시겠습니까?(Y/N) ");
 		String ack = br.readLine();
 		
 		switch (ack) {
 		case "Y", "y":
-			System.out.println("일기의 제목을 수정하세요: ");
-			String newtitle = br.readLine();
-			System.out.println("일기의 내용을 수정하세요: ");
-			String content = br.readLine();
-			System.out.println("---------------------------------");
+			System.out.print("일기의 제목을 수정하세요: ");
+			String updateTitle = br.readLine();
+			System.out.print("일기의 내용을 수정하세요: ");
+			String updateContent = br.readLine();
 			
-			// 서버로부터 결과 수신 및 출력
-//			Diary diary = new Diary(ServiceMenu2.다이어리_수정, newtitle, content, userId);
+			diary.setNewTitle(updateTitle);
+			diary.setContent(updateContent);
 			return Optional.of(diary);
 		case "N", "n":
 			return Optional.empty();
@@ -394,7 +393,7 @@ public class Client {
 	private static Diary handleDiarySelectSpec(Scanner scanner) throws Exception {
 		// 다이어리 특정 날짜 조회 처리
 		System.out.println(">>>특정 날짜 일기 조회<<<");
-		System.out.println("-----조회하실 날짜를 입력하세요. [형식 : yyyy-MM-dd]-----");
+		System.out.print("-----조회하실 날짜를 입력하세요. [형식 : yyyy-MM-dd]-----");
 		
 		  // 개행 문자를 소비하여 버리고 사용자 입력 받기
 		scanner.nextLine();
@@ -405,15 +404,12 @@ public class Client {
 		        System.out.println("입력된 날짜가 없습니다.");
 		    }
 		
-		System.out.println("@@@@@@if뒤");
 		Diary diary = new Diary(ServiceMenu2.다이어리_특정날짜, userId, CreateDate);
 		try {
-			System.out.println("#####try");
 			DiaryDAO.getDiary("specdate" , diary);
 		} catch  (SQLException e) {
 			e.printStackTrace();
 		}
-		System.out.println("%%%%%리턴전");
 		return diary;
 	}
 
