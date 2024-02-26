@@ -73,27 +73,38 @@ public class DiaryDAO {
    }
 
    /**
-    * @author 김동우 
+    * @author 김동우
+    *
+    * 		updateDiary : diary 수정
+    *
+    * 		result : db에 저장이 성공적으로 되면 1을 반환
+    *
     * 일기 수정
     */
    public static int updateDiary(Connection conn, Diary diary) throws Exception {
-      String sql;
+ 	   int result = 0;
       PreparedStatement pstmt = null;
-      int result = 0;
-      
       try {
-         sql = "UPDATE diary SET title = ?, content = ? WHERER diaryId = ?";
+         String sql = "UPDATE DIARY SET title = ?, content = ? WHERE userId = ? AND title = ?";
+        
          pstmt = conn.prepareStatement(sql);
-         pstmt.setString(1, diary.getTitle());
+        
+         pstmt.setString(1, diary.getNewTitle());
          pstmt.setString(2, diary.getContent());
+         pstmt.setInt(3, diary.getUserId());
+         pstmt.setString(4, diary.getTitle());
+        
          result = pstmt.executeUpdate();
       } catch (Exception e) {
          e.printStackTrace();
       } finally {
          pstmt.close();
       }
+      System.out.println("DiaryDAO: "  + result);
       return result;
    }
+   
+
 
    /**
     * @author 김동우
@@ -121,8 +132,7 @@ public class DiaryDAO {
                    sql = "SELECT * FROM diary WHERE userId = ? AND createDate = ? AND isDeleted = 0 ORDER BY createDate ASC";
                    pstmt = DBConnection.getConnection().prepareStatement(sql);
                    pstmt.setInt(1, diary.getUserId());
-                   pstmt.setDate(2, Date.valueOf(diary.getCreateDate()));
-                   pstmt.setBoolean(3, diary.getIsDeleted());
+                   pstmt.setString(2, (diary.getCreateDate()));
                    
                } else {
                    throw new IllegalArgumentException("Invalid filter value. Supported values: 'all', 'specdate'");
@@ -137,7 +147,7 @@ public class DiaryDAO {
                    String title = rs.getString("title");
                    String content = rs.getString("content");
                    Integer userId = rs.getInt("userId");
-                   LocalDate createDate = rs.getDate("createDate").toLocalDate();
+                   String createDate = rs.getString("createDate");
                    Boolean isDeleted = rs.getBoolean("isDeleted");
                    
                    Diary getDiary = new Diary(diaryId, title, content, userId, createDate, isDeleted);
