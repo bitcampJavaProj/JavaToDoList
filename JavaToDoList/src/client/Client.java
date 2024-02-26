@@ -31,8 +31,7 @@ public class Client {
 		try {
 			boolean isLoggedIn = false;
 
-			exitWhile:
-			while (true) {
+			exitWhile: while (true) {
 				if (!isLoggedIn) {
 					displayLoginMenu(scanner);
 					String loginChoice = scanner.nextLine();
@@ -308,23 +307,19 @@ public class Client {
 	}
 
 	/**
-	 * @author 권재원<br>
-	 *         handleDiaryEntry : 일기 작성<br>
-	 * 
-	 * @return diary :
+	 * * @author 권재원<br>
+	 * * handleDiaryEntry : 일기 작성<br>
+	 * * * @return diary :
 	 */
 	private static Diary handleDiaryEntry(Scanner scanner) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		System.out.println("----------일기 작성----------");
 		System.out.print("제목을 입력해주세요: ");
-		String title = scanner.next();
-		scanner.nextLine();
+		String title = br.readLine();
 		System.out.print("내용을 입력해주세요: ");
-		String content = scanner.next();
-		scanner.nextLine();
-
+		String content = br.readLine();
 		Diary diary = new Diary(ServiceMenu2.다이어리_작성, title, content, userId);
 		System.out.println(diary.toString());
-
 		return diary;
 	}
 
