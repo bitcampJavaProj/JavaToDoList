@@ -316,7 +316,7 @@ public class Client {
 	/**
 	 * * @author 권재원<br>
 	 * * handleDiaryEntry : 일기 작성<br>
-	 * * * @return diary :
+	 * * * @return diary : 다이어리 작성에 성공하면 diary 객체를 반환
 	 */
 	private static Diary handleDiaryEntry(Scanner scanner) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -334,7 +334,7 @@ public class Client {
 	 * @author 김동우<br>
 	 *         handleDiaryAllRetrieval : 일기 전체 조회<br>
 	 * 
-	 * @return diary :
+	 * @return diary : 수정 성공하면 Optional로 감싸서 반환
 	 */
 	private static Optional<Diary> handleDiaryUpdate(Scanner scanner) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -365,7 +365,7 @@ public class Client {
 	 * @author 김동우<br>
 	 *         handleDiarySelectAll : 일기 전체 조회<br>
 	 * 
-	 * @return diary :
+	 * @return diary : 다이어리 조회 성공하면 diary 객체를 반환
 	 */
 	private static Diary handleDiarySelectAll() throws IOException {
 		// 다이어리 전체 조회 처리
@@ -383,7 +383,7 @@ public class Client {
 	 * @author 김동우<br>
 	 *         handleDiarySelectSpec : 일기 특정 날짜 조회<br>
 	 *
-	 * @return diary :
+	 * @return diary : 다이어리 조회에 성공하면 diary 객체를 반환
 	 */
 	private static Diary handleDiarySelectSpec(Scanner scanner) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -408,7 +408,7 @@ public class Client {
 	/**
 	 * * @author 권재원<br>
 	 * * handleDiaryEntry : 제목을 입력받아 일기 삭제 and null처리를 위해 Optional 사용<br>
-	 * * * @return diary :
+	 * * * @return diary : 삭제 성공하면 Optional로 감싸서 반환
 	 */
 	private static Optional<Diary> handleDiaryDelete(Scanner scanner) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));

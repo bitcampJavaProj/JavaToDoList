@@ -11,37 +11,40 @@ public class Diary extends Cmd implements Serializable {
 	private Integer userId;
 	private String createDate;
 	private Boolean isDeleted;
-
 	private String newTitle;
-
-	public String getNewTitle() {
-		return newTitle;
-	}
-
-	public void setNewTitle(String newTitle) {
-		this.newTitle = newTitle;
-	}
 
 	public Diary() {
 	}
 
+	/**
+	 * 일기 전체 조회
+	 */
 	public Diary(Object cmd, Integer userId) {
 		this.cmd = cmd;
 		this.userId = userId;
 	}
 
+	/**
+	 * 일기 수정, 삭제
+	 */
 	public Diary(Object cmd, String title, Integer userId) {
 		this.cmd = cmd;
 		this.title = title;
 		this.userId = userId;
 	}
 
+	/**
+	 * 일기 특정 날자 조회
+	 */
 	public Diary(Object cmd, Integer userId, String createDate) {
 		this.cmd = cmd;
 		this.userId = userId;
 		this.createDate = createDate;
 	}
 
+	/**
+	 * 일기 작성
+	 */
 	public Diary(Object cmd, String title, String content, Integer userId) {
 		this.cmd = cmd;
 		this.title = title;
@@ -49,13 +52,9 @@ public class Diary extends Cmd implements Serializable {
 		this.userId = userId;
 	}
 
-	public Diary(Object cmd, String content, Integer userId, String newTitle) {
-		this.cmd = cmd;
-		this.content = content;
-		this.userId = userId;
-		this.newTitle = newTitle;
-	}
-
+	/**
+	 * 일기 전체 조회
+	 */
 	public Diary(Integer diaryId, String title, String content, Integer userId, String createDate, Boolean isDeleted) {
 		this.diaryId = diaryId;
 		this.title = title;
@@ -117,6 +116,14 @@ public class Diary extends Cmd implements Serializable {
 		return serialVersionUID;
 	}
 
+	public String getNewTitle() {
+		return newTitle;
+	}
+
+	public void setNewTitle(String newTitle) {
+		this.newTitle = newTitle;
+	}
+	
 	@Override
 	public String toString() {
 		String str = String.format("제목: %s\n내용: %s\n작성자id: %d\n생성 날짜: %s\n", title, content, userId, createDate);
