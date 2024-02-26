@@ -163,7 +163,7 @@ class WorkerThread extends Thread {
 				e.printStackTrace();
 			}
 
-		}  else if(cmdObj.getCmd().equals("로그아웃")) {
+		}  else if((Integer)cmdObj.getCmd() == 12) {
 			String ack = ackObj.toString();
 			OutputStream out = this.socket.getOutputStream();
 			PrintWriter pw = new PrintWriter(new OutputStreamWriter(out));

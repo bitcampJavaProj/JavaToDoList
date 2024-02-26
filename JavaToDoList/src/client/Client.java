@@ -29,8 +29,7 @@ public class Client {
 		Scanner scanner = new Scanner(System.in);
 		try {
 			boolean isLoggedIn = false;
-
-			
+      
 			exitWhile:
 			while (true) {
 				if (!isLoggedIn) {
@@ -51,9 +50,6 @@ public class Client {
 							isLoggedIn = true;
 						}
 						break;
-//					case "로그아웃":
-//						System.out.println("로그아웃되었습니다.");
-//						return;
 					default:
 						System.out.println("회원가입/로그인 중 하나를 입력해주세요.");
 						break;
@@ -132,10 +128,11 @@ public class Client {
 					case ServiceMenu2.로그아웃:
 						userId = 0;
 						isLoggedIn = false;
+						System.out.println("--------------------");
 						System.out.println("로그아웃 되었습니다.");
 						break exitWhile;
 					default:
-						System.out.println("1~11 사이의 값을 입력해주세요.");
+						System.out.println("1~12 사이의 값을 입력해주세요.");
 						break;
 					}
 				}
@@ -150,7 +147,6 @@ public class Client {
 		System.out.println("----------옵션 선택----------");
 		System.out.println("회원가입");
 		System.out.println("로그인");
-//		System.out.println("로그아웃");
 		System.out.println();
 	}
 
@@ -204,6 +200,7 @@ public class Client {
 		System.out.println("9. 일기 수정");
 		System.out.println("10. 일기 전체 조회");
 		System.out.println("11. 작성 날짜로 일기 조회");
+		System.out.println("12. 로그아웃");
 		System.out.println();
 	}
 
@@ -318,23 +315,19 @@ public class Client {
 	}
 
 	/**
-	 * @author 권재원<br>
-	 *         handleDiaryEntry : 일기 작성<br>
-	 * 
-	 * @return diary :
+	 * * @author 권재원<br>
+	 * * handleDiaryEntry : 일기 작성<br>
+	 * * * @return diary :
 	 */
 	private static Diary handleDiaryEntry(Scanner scanner) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		System.out.println("----------일기 작성----------");
 		System.out.print("제목을 입력해주세요: ");
-		String title = scanner.next();
-		scanner.nextLine();
+		String title = br.readLine();
 		System.out.print("내용을 입력해주세요: ");
-		String content = scanner.next();
-		scanner.nextLine();
-
+		String content = br.readLine();
 		Diary diary = new Diary(ServiceMenu2.다이어리_작성, title, content, userId);
 		System.out.println(diary.toString());
-
 		return diary;
 	}
 	
@@ -423,7 +416,6 @@ public class Client {
 		System.out.println("%%%%%리턴전");
 		return diary;
 	}
-
 
 	/**
 	 * * @author 권재원<br>
