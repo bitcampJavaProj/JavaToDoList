@@ -101,7 +101,15 @@ public class Client {
 						oos.writeObject(handleDiaryEntry(scanner));
 						break;
 					case ServiceMenu2.다이어리_삭제:
-						handleDiaryDelete(scanner);
+						Optional<Diary> optionalDiary = handleDiaryDelete(scanner);
+						optionalDiary.ifPresentOrElse(diary -> {
+							try {
+								oos.writeObject(diary);
+								System.out.println("다이어리 삭제가 완료되었습니다.");
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}, () -> System.out.println("다이어리 삭제가 취소되었습니다."));
 						break;
 					case ServiceMenu2.다이어리_수정:
 						break;
@@ -348,15 +356,21 @@ public class Client {
 //	}
 //
 
+	/**
+	 * * @author 권재원<br>
+	 * * handleDiaryEntry : 제목을 입력받아 일기 삭제 and null처리를 위해 Optional 사용<br>
+	 * * * @return diary :
+	 */
 	private static Optional<Diary> handleDiaryDelete(Scanner scanner) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		System.out.println("----------일기 삭제----------");
 		System.out.print("삭제하실 일기의 제목을 입력해주세요: ");
-		String title = scanner.next();
+		String title = br.readLine();
 		System.out.print("정말 삭제하시겠습니까?(Y/N) ");
-		String ack = scanner.next();
+		String ack = br.readLine();
 		switch (ack) {
 		case "Y", "y":
-			Diary diary = new Diary(ServiceMenu2.투두리스트_삭제, userId, title);
+			Diary diary = new Diary(ServiceMenu2.다이어리_삭제, userId, title);
 			return Optional.of(diary);
 		case "N", "n":
 			return Optional.empty();
