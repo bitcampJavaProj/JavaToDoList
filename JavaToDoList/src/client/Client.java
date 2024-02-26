@@ -74,6 +74,7 @@ public class Client {
 								e.printStackTrace();
 							}
 						}, () -> System.out.println("투두리스트 삭제가 취소되었습니다."));
+						break;
 					case ServiceMenu2.투두리스트_수정:
 						Optional<ToDoList> optionalToDoList2 = handleToDoListUpdate(scanner);
 						optionalToDoList2.ifPresentOrElse(toDoList -> {
@@ -84,6 +85,7 @@ public class Client {
 								e.printStackTrace();
 							}
 						}, () -> System.out.println("투두리스트 수정이 취소되었습니다."));
+						break;
 					case ServiceMenu2.투두리스트_전체_조회:
 						oos.writeObject(handleToDoList("all"));
 						break;
