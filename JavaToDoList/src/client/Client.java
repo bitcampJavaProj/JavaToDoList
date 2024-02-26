@@ -37,7 +37,17 @@ public class Client {
 
 					switch (loginChoice) {
 					case "회원가입":
-						oos.writeObject(handleSignUp(scanner));
+						User user0 = handleSignUp(scanner);
+						oos.writeObject(user0);
+						System.out.println(user0.toString());
+						Integer result = UserDAO.insertUser(user0);
+						System.out.println();
+						if (result == 1) {
+							System.out.println("<<  가입되었습니다. 로그인을 진행해주세요.  >>");
+						} else {
+							System.out.println("<<  가입에 실패했습니다. 다시 시도해 주세요.  >>");
+						}
+						System.out.println();
 						break;
 					case "로그인":
 						User user = handleLogin(scanner);
@@ -50,7 +60,7 @@ public class Client {
 						}
 						break;
 					default:
-						System.out.println("회원가입/로그인 중 하나를 입력해주세요.");
+						System.out.println("<<  회원가입/로그인 중 하나를 입력해주세요.  >>");
 						break;
 					}
 				} else {
@@ -62,29 +72,29 @@ public class Client {
 					switch (mainMenuChoice) {
 					case ServiceMenu2.투두리스트_작성:
 						oos.writeObject(handleToDoListCreation(scanner));
-						System.out.println("투두리스트 작성이 완료되었습니다.");
+						System.out.println("<<  투두리스트 작성이 완료되었습니다.  >>");
 						break;
 					case ServiceMenu2.투두리스트_삭제:
 						Optional<ToDoList> optionalToDoList = handleToDoListDelete(scanner);
 						optionalToDoList.ifPresentOrElse(toDoList -> {
 							try {
 								oos.writeObject(toDoList);
-								System.out.println("투두리스트 삭제가 완료되었습니다.");
+								System.out.println("<<  투두리스트 삭제가 완료되었습니다.  >>");
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
-						}, () -> System.out.println("투두리스트 삭제가 취소되었습니다."));
+						}, () -> System.out.println("<<  투두리스트 삭제가 취소되었습니다.  >>"));
 						break;
 					case ServiceMenu2.투두리스트_수정:
 						Optional<ToDoList> optionalToDoList2 = handleToDoListUpdate(scanner);
 						optionalToDoList2.ifPresentOrElse(toDoList -> {
 							try {
 								oos.writeObject(toDoList);
-								System.out.println("투두리스트 수정이 완료되었습니다.");
+								System.out.println("<<  투두리스트 수정이 완료되었습니다.  >>");
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
-						}, () -> System.out.println("투두리스트 수정이 취소되었습니다."));
+						}, () -> System.out.println("<<  투두리스트 수정이 취소되었습니다.  >>"));
 						break;
 					case ServiceMenu2.투두리스트_전체_조회:
 						oos.writeObject(handleToDoList("all"));
@@ -103,22 +113,22 @@ public class Client {
 						optionalDiary.ifPresentOrElse(diary -> {
 							try {
 								oos.writeObject(diary);
-								System.out.println("다이어리 삭제가 완료되었습니다.");
+								System.out.println("<<  다이어리 삭제가 완료되었습니다.  >>");
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
-						}, () -> System.out.println("다이어리 삭제가 취소되었습니다."));
+						}, () -> System.out.println("<<  다이어리 삭제가 취소되었습니다.  >>"));
 						break;
 					case ServiceMenu2.다이어리_수정:
 						Optional<Diary> optionalDriay = handleDiaryUpdate(scanner);
 						optionalDriay.ifPresentOrElse(diary -> {
 							try {
 								oos.writeObject(diary);
-								System.out.println("일기 수정이 완료되었습니다.");
+								System.out.println("<<  일기 수정이 완료되었습니다.  >>");
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
-						}, () -> System.out.println("일기 수정이 취소되었습니다."));
+						}, () -> System.out.println("<<  일기 수정이 취소되었습니다.  >>"));
 						break;
 					case ServiceMenu2.다이어리_전체_조회:
 						oos.writeObject(handleDiarySelectAll());
@@ -130,10 +140,10 @@ public class Client {
 						userId = 0;
 						isLoggedIn = false;
 						System.out.println("--------------------");
-						System.out.println("로그아웃 되었습니다.");
+						System.out.println("<<  로그아웃 되었습니다.  >>");
 						break exitWhile;
 					default:
-						System.out.println("1~12 사이의 값을 입력해주세요.");
+						System.out.println("<<  1~12 사이의 값을 입력해주세요.  >>");
 						break;
 					}
 				}
@@ -158,11 +168,12 @@ public class Client {
 	 * @return user : 회원가입에 성공하면 user 객체를 반환
 	 */
 	private static User handleSignUp(Scanner scanner) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		System.out.println("----------회원가입----------");
 		System.out.print("사용하실 ID를 입력해주세요: ");
-		String username = scanner.nextLine();
+		String username = br.readLine();
 		System.out.print("비밀번호를 입력해주세요: ");
-		String password = scanner.nextLine();
+		String password = br.readLine();
 
 		// 회원가입 정보를 서버로 전송
 		User user = new User("회원가입", username, password);
@@ -177,11 +188,12 @@ public class Client {
 	 * @return user : 로그인에 성공하면 user 객체를 반환
 	 */
 	private static User handleLogin(Scanner scanner) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		System.out.println("----------로그인----------");
 		System.out.print("ID를 입력해주세요: ");
-		String username = scanner.nextLine();
+		String username = br.readLine();
 		System.out.print("비밀번호를 입력해주세요: ");
-		String password = scanner.nextLine();
+		String password = br.readLine();
 
 		User user = new User("로그인", username, password);
 		return user;
@@ -248,7 +260,7 @@ public class Client {
 		case "N", "n":
 			return Optional.empty();
 		default:
-			System.out.println("잘못된 입력입니다.");
+			System.out.println("<<  잘못된 입력입니다.  >>");
 			return Optional.empty();
 		}
 	}
@@ -289,7 +301,7 @@ public class Client {
 		case "N", "n":
 			return Optional.empty();
 		default:
-			System.out.println("잘못된 입력입니다.");
+			System.out.println("<<  잘못된 입력입니다.  >>");
 			return Optional.empty();
 		}
 	}
@@ -334,31 +346,33 @@ public class Client {
 
 	/**
 	 * @author 김동우<br>
-	 *         handleDiaryAllRetrieval : 일기 전체 조회<br>
+	 *         handleDiaryUpdate : 일기 수정<br>
 	 * 
 	 * @return diary : 수정 성공하면 Optional로 감싸서 반환
 	 */
 	private static Optional<Diary> handleDiaryUpdate(Scanner scanner) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		System.out.println("------------일기 수정------------");
-		System.out.println("수정하실 일기의 제목을 입력해주세요: ");
+		System.out.print("수정하실 일기의 제목을 입력해주세요: ");
 		String title = br.readLine();
 		Diary diary = new Diary(ServiceMenu2.다이어리_수정, title, userId);
-		System.out.println("수정하시겠습니까?(Y/N) ");
+		System.out.print("수정하시겠습니까?(Y/N) ");
 		String ack = br.readLine();
 
 		switch (ack) {
 		case "Y", "y":
-			System.out.println("일기의 제목을 수정하세요: ");
+			System.out.print("일기의 제목을 수정하세요: ");
 			String newtitle = br.readLine();
-			System.out.println("일기의 내용을 수정하세요: ");
+			System.out.print("일기의 내용을 수정하세요: ");
 			String content = br.readLine();
+			diary.setNewTitle(newtitle);
+			diary.setContent(content);
 			System.out.println("---------------------------------");
 			return Optional.of(diary);
 		case "N", "n":
 			return Optional.empty();
 		default:
-			System.out.println("잘못된 입력입니다.");
+			System.out.println("<<  잘못된 입력입니다.  >>");
 			return Optional.empty();
 		}
 	}
@@ -390,18 +404,18 @@ public class Client {
 	private static Diary handleDiarySelectSpec(Scanner scanner) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		System.out.println("------------특정 날짜 일기 조회------------");
-		System.out.println("조회하실 날짜를 입력하세요(예 : yyyy-MM-dd): ");
+		System.out.print("조회하실 날짜를 입력하세요(예 : yyyy-MM-dd): ");
 
 		String CreateDate = br.readLine();
 
-		  if (CreateDate.isEmpty()) {
-		        System.out.println("입력된 날짜가 없습니다.");
-		    }
+		if (CreateDate.isEmpty()) {
+			System.out.println("<<  입력된 날짜가 없습니다.  >>");
+		}
 
 		Diary diary = new Diary(ServiceMenu2.다이어리_특정날짜, userId, CreateDate);
 		try {
-			DiaryDAO.getDiary("specdate" , diary);
-		} catch  (SQLException e) {
+			DiaryDAO.getDiary("specdate", diary);
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return diary;
@@ -426,7 +440,7 @@ public class Client {
 		case "N", "n":
 			return Optional.empty();
 		default:
-			System.out.println("잘못된 입력입니다.");
+			System.out.println("<<  잘못된 입력입니다.  >>");
 			return Optional.empty();
 		}
 	}
