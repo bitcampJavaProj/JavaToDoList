@@ -79,7 +79,15 @@ public class Client {
 							}
 						}, () -> System.out.println("투두리스트 삭제가 취소되었습니다."));
 					case ServiceMenu2.투두리스트_수정:
-						oos.writeObject(handleToDoListUpdate(scanner));
+						Optional<ToDoList> optionalToDoList2 = handleToDoListUpdate(scanner);
+						optionalToDoList2.ifPresentOrElse(toDoList -> {
+							try {
+								oos.writeObject(toDoList);
+								System.out.println("투두리스트 수정이 완료되었습니다.");
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}, () -> System.out.println("투두리스트 수정이 취소되었습니다."));
 					case ServiceMenu2.투두리스트_전체_조회:
 						oos.writeObject(handleToDoList("all"));
 						break;
@@ -205,11 +213,12 @@ public class Client {
 	 * @return toDoList : 투두리스트 작성에 성공하면 toDoList 객체를 반환함
 	 */
 	private static Optional<ToDoList> handleToDoListDelete(Scanner scanner) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		System.out.println("----------투두리스트 삭제----------");
 		System.out.print("삭제하실 투두리스트의 제목을 입력해주세요: ");
-		String title = scanner.next();
+		String title = br.readLine();
 		System.out.print("정말 삭제하시겠습니까?(Y/N) ");
-		String ack = scanner.next();
+		String ack = br.readLine();
 		switch (ack) {
 		case "Y", "y":
 			ToDoList toDoList = new ToDoList(ServiceMenu2.투두리스트_삭제, userId, title);
@@ -229,27 +238,38 @@ public class Client {
 	 * 
 	 * @return toDoList : 투두리스트 작성에 성공하면 toDoList 객체를 반환함
 	 */
-	private static ToDoList handleToDoListUpdate(Scanner scanner) throws IOException {
+	private static Optional<ToDoList> handleToDoListUpdate(Scanner scanner) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		System.out.println("----------투두리스트 수정----------");
 		System.out.print("수정하실 투두리스트의 제목을 입력해주세요: ");
-		String title = scanner.next();
+		String title = br.readLine();
 		ToDoList toDoList = new ToDoList(ServiceMenu2.투두리스트_수정, userId, title);
-		System.out.print("수정할 제목을 입력해주세요: ");
-		String updateTitle = scanner.next();
-		System.out.println("수정할 할 일을 입력해주세요: ");
-		String updateContent = scanner.next();
-		System.out.println("수정할 마감일을 입력해주세요(예: 2024-02-19): ");
-		String updateClosedDate = scanner.next();
-		System.out.println("우선순위를 입력해주세요: ");
-		Integer updatePriority = scanner.nextInt();
-		System.out.println("완료 여부를 수정해주세요(true/false): ");
-		Boolean updateIsComplete = scanner.nextBoolean();
-		toDoList.setNewTitle(updateTitle);
-		toDoList.setContent(updateContent);
-		toDoList.setClosedDate(updateClosedDate);
-		toDoList.setPriority(updatePriority);
-		toDoList.setIsComplete(updateIsComplete);
-		return toDoList;
+		System.out.print("수정하시겠습니까?(Y/N) ");
+		String ack = br.readLine();
+		switch (ack) {
+		case "Y", "y":
+			System.out.print("수정할 제목을 입력해주세요: ");
+			String updateTitle = br.readLine();
+			System.out.print("수정할 할 일을 입력해주세요: ");
+			String updateContent = br.readLine();
+			System.out.print("수정할 마감일을 입력해주세요(예: 2024-02-19): ");
+			String updateClosedDate = br.readLine();
+			System.out.print("우선순위를 입력해주세요: ");
+			Integer updatePriority = Integer.parseInt(br.readLine());
+			System.out.print("완료 여부를 수정해주세요(true/false): ");
+			Boolean updateIsComplete = Boolean.parseBoolean(br.readLine());
+			toDoList.setNewTitle(updateTitle);
+			toDoList.setContent(updateContent);
+			toDoList.setClosedDate(updateClosedDate);
+			toDoList.setPriority(updatePriority);
+			toDoList.setIsComplete(updateIsComplete);
+			return Optional.of(toDoList);
+		case "N", "n":
+			return Optional.empty();
+		default:
+			System.out.println("잘못된 입력입니다.");
+			return Optional.empty();
+		}
 	}
 
 	/**
@@ -277,7 +297,7 @@ public class Client {
 	 * @author 권재원<br>
 	 *         handleDiaryEntry : 일기 작성<br>
 	 * 
-	 * @return diary : 
+	 * @return diary :
 	 */
 	private static Diary handleDiaryEntry(Scanner scanner) throws IOException {
 		System.out.println("----------일기 작성----------");
@@ -298,7 +318,7 @@ public class Client {
 	 * @author 김동우<br>
 	 *         handleDiaryAllRetrieval : 일기 전체 조회<br>
 	 * 
-	 * @return diary : 
+	 * @return diary :
 	 */
 	private static Diary handleDiaryAllRetrieval() throws IOException {
 		System.out.println("----------전체 일기 조회----------");
@@ -309,7 +329,7 @@ public class Client {
 	 * @author 김동우<br>
 	 *         handleDiarySpecRetrieval : 일기 전체 조회<br>
 	 * 
-	 * @return diary : 
+	 * @return diary :
 	 */
 	private static Diary handleDiarySpecRetrieval(Scanner scanner, String str) throws IOException {
 		System.out.println("----------특정 날짜 일기 조회----------");
@@ -327,10 +347,8 @@ public class Client {
 //		// 서버로부터 결과 수신 및 출력
 //	}
 //
-	
-	
-	private static Optional<Diary> handleDiaryDelete(Scanner scanner)
-			throws IOException {
+
+	private static Optional<Diary> handleDiaryDelete(Scanner scanner) throws IOException {
 		System.out.println("----------일기 삭제----------");
 		System.out.print("삭제하실 일기의 제목을 입력해주세요: ");
 		String title = scanner.next();
