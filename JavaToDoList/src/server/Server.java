@@ -23,10 +23,10 @@ import client.ServiceMenu2;
 import mysql.DBConnection;
 
 public class Server {
-    public static void main(String[] args) {
-        // DB 연결 초기화
-        DBConnection.openConnection();
-        
+	public static void main(String[] args) {
+		// DB 연결 초기화
+		DBConnection.openConnection();
+
 		final int PORT = 9000;
 		Hashtable<String, Socket> clientHt = new Hashtable<>();
 
@@ -43,11 +43,10 @@ public class Server {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-        
-        DBConnection.closeConnection();
-    }
-}
 
+		DBConnection.closeConnection();
+	}
+}
 
 class WorkerThread extends Thread {
 	private Socket socket;
@@ -71,69 +70,68 @@ class WorkerThread extends Thread {
 			InputStream in = socket.getInputStream();
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-						
-			while(true) {
+
+			while (true) {
 				/**
 				 * @author 서헤리
 				 * 
-				 * ObjectInputStream인 ois를 사용하여
-				 * 클라이언트로부터 전송된 객체를 수신함
-				 * 수신된 객체가 null일 경우 반복문 종료 + 스레드 실행 종료
+				 *         ObjectInputStream인 ois를 사용하여 클라이언트로부터 전송된 객체를 수신함 수신된 객체가 null일 경우
+				 *         반복문 종료 + 스레드 실행 종료
 				 */
 				Object packetObj = ois.readObject();
-                if (packetObj instanceof User) {
-                    processUserPacket(packetObj);
-                } else if (packetObj instanceof ToDoList || packetObj instanceof Diary) {
-                    processMenuPacket(packetObj, oos);
-                }
+				if (packetObj instanceof User) {
+					processUserPacket(packetObj);
+				} else if (packetObj instanceof ToDoList || packetObj instanceof Diary) {
+					processMenuPacket(packetObj, oos);
+				}
 			}
 		} catch (Exception e) {
 			System.out.printf("<서버-%s>%s\n", getName(), e.getMessage());
 		}
 	}
-	
+
 	private void processMenuPacket(Object packetObj, ObjectOutputStream oos) throws Exception {
-		cmdObj = (Cmd)packetObj;
-		
-		if(cmdObj instanceof ToDoList) {
-			toDoListObj = (ToDoList)cmdObj;
-		} else if(cmdObj instanceof Diary) {
-			diaryObj = (Diary)cmdObj;
+		cmdObj = (Cmd) packetObj;
+
+		if (cmdObj instanceof ToDoList) {
+			toDoListObj = (ToDoList) cmdObj;
+		} else if (cmdObj instanceof Diary) {
+			diaryObj = (Diary) cmdObj;
 		}
 
-		switch ((int)cmdObj.getCmd()) {
-		case ServiceMenu2.투두리스트_작성: 
+		switch ((int) cmdObj.getCmd()) {
+		case ServiceMenu2.투두리스트_작성:
 			ToDoListDAO.insertToDoList(DBConnection.getConnection(), toDoListObj);
 			break;
-		case ServiceMenu2.투두리스트_삭제: 
+		case ServiceMenu2.투두리스트_삭제:
 			ToDoListDAO.deleteToDoList(DBConnection.getConnection(), toDoListObj);
 			break;
-		case ServiceMenu2.투두리스트_수정: 
+		case ServiceMenu2.투두리스트_수정:
 			ToDoListDAO.updateToDoList(DBConnection.getConnection(), toDoListObj);
 			break;
-		case ServiceMenu2.투두리스트_전체_조회: 
-			ToDoListDAO.getTodoList("all", toDoListObj);   
-			
-            break;
-		case ServiceMenu2.투두리스트_완료: 
+		case ServiceMenu2.투두리스트_전체_조회:
+			ToDoListDAO.getTodoList("all", toDoListObj);
+
+			break;
+		case ServiceMenu2.투두리스트_완료:
 			ToDoListDAO.getTodoList("completed", toDoListObj);
 			break;
-		case ServiceMenu2.투두리스트_미완료: 
+		case ServiceMenu2.투두리스트_미완료:
 			ToDoListDAO.getTodoList("incomplete", toDoListObj);
 			break;
-		case ServiceMenu2.다이어리_작성: 
+		case ServiceMenu2.다이어리_작성:
 			DiaryDAO.writeDiary(DBConnection.getConnection(), diaryObj);
 			break;
-		case ServiceMenu2.다이어리_삭제: 
+		case ServiceMenu2.다이어리_삭제:
 			DiaryDAO.deleteDiary(DBConnection.getConnection(), diaryObj);
 			break;
-		case ServiceMenu2.다이어리_수정: 
+		case ServiceMenu2.다이어리_수정:
 			DiaryDAO.updateDiary(DBConnection.getConnection(), diaryObj);
 			break;
-		case ServiceMenu2.다이어리_전체_조회: 
+		case ServiceMenu2.다이어리_전체_조회:
 			DiaryDAO.getDiary("all", diaryObj);
 			break;
-		case ServiceMenu2.다이어리_특정날짜: 
+		case ServiceMenu2.다이어리_특정날짜:
 			DiaryDAO.getDiary("specdate", diaryObj);
 			break;
 		}
@@ -141,21 +139,20 @@ class WorkerThread extends Thread {
 
 	private void processUserPacket(Object packetObj) throws Exception {
 		Object ackObj = new Object();
-		
-		cmdObj = (Cmd)packetObj;
-		if(cmdObj.getCmd().equals("회원가입")) {
+
+		cmdObj = (Cmd) packetObj;
+		if (cmdObj.getCmd().equals("회원가입")) {
 			try {
 				if (cmdObj instanceof User) {
-					User userObj = (User)cmdObj;
-					UserDAO.insertUser(userObj);
+					User userObj = (User) cmdObj;
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-		} else if(cmdObj.getCmd().equals("로그인")) {
+
+		} else if (cmdObj.getCmd().equals("로그인")) {
 			try {
-				User userObj = (User)cmdObj;
+				User userObj = (User) cmdObj;
 				System.out.println(userObj.toString());
 				UserDAO.loginUser(userObj);
 				userId = UserDAO.loginUser(userObj);
@@ -163,7 +160,7 @@ class WorkerThread extends Thread {
 				e.printStackTrace();
 			}
 
-		}  else if((Integer)cmdObj.getCmd() == 12) {
+		} else if ((Integer) cmdObj.getCmd() == 12) {
 			String ack = ackObj.toString();
 			OutputStream out = this.socket.getOutputStream();
 			PrintWriter pw = new PrintWriter(new OutputStreamWriter(out));
