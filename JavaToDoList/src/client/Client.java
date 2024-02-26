@@ -302,7 +302,7 @@ public class Client {
 	 * @return toDoList : 투두리스트 작성에 성공하면 toDoList 객체를 반환함
 	 */
 	private static ToDoList handleToDoList(String filter) throws IOException {
-		System.out.printf("----------투두리스트 %s 조회----------",
+		System.out.printf("\n----------투두리스트 %s 조회----------\n",
 				filter == "all" ? "전체" : filter == "completed" ? "완료 목록" : "미완료 목록");
 		ToDoList toDoList = new ToDoList(filter == "all" ? ServiceMenu2.투두리스트_전체_조회
 				: filter == "completed" ? ServiceMenu2.투두리스트_완료 : ServiceMenu2.투두리스트_미완료, userId);

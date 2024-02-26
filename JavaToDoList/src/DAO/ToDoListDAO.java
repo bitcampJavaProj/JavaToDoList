@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
+import DTO.Diary;
 import DTO.ToDoList;
 import mysql.DBConnection;
 
@@ -139,38 +140,37 @@ public class ToDoListDAO {
 				throw new IllegalArgumentException(
 						"Invalid filter value. Supported values: 'all', 'completed', 'incomplete'");
 			}
-
 			ps = DBConnection.getConnection().prepareStatement(sql);
-
 			ps.setInt(1, toDoList.getUserId());
-
 			ResultSet rs = ps.executeQuery();
+			if (!rs.next()) {
+				System.out.println("조회할 데이터가 없습니다.");
+			} else {
+				do {
+					Integer toDoListId = rs.getInt("toDoListId");
+					Integer userId = rs.getInt("userId");
+					String title = rs.getString("title");
+					String content = rs.getString("content");
+					LocalDate createDate = rs.getDate("createDate").toLocalDate();
+					String closedDate = rs.getString("closedDate");
+					Integer priority = rs.getInt("priority");
+					Boolean isComplete = rs.getBoolean("isComplete");
+					Boolean isDeleted = rs.getBoolean("isDeleted");
 
-			while (rs.next()) {
-				Integer toDoListId = rs.getInt("toDoListId");
-				Integer userId = rs.getInt("userId");
-				String title = rs.getString("title");
-				String content = rs.getString("content");
-				LocalDate createDate = rs.getDate("createDate").toLocalDate();
-				String closedDate = rs.getString("closedDate");
-				Integer priority = rs.getInt("priority");
-				Boolean isComplete = rs.getBoolean("isComplete");
-				Boolean isDeleted = rs.getBoolean("isDeleted");
+					ToDoList list = new ToDoList(toDoListId, userId, title, content, createDate, closedDate, priority,
+							isComplete, isDeleted);
 
-				ToDoList list = new ToDoList(toDoListId, userId, title, content, createDate, closedDate, priority,
-						isComplete, isDeleted);
+					System.out.printf("%s", list);
+					System.out.printf("---------------------------------\n");
 
-				System.out.printf("%s", list);
-				System.out.printf("---------------------------------\n");
-
-				todoList.add(list);
+					todoList.add(list);
+				} while (rs.next());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			ps.close();
 		}
-
 		return todoList;
 	}
 }
